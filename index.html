@@ -1262,18 +1262,6 @@ Ejemplo:
     importance: "Ayuda a identificar en qué fase se encuentra un ataque y cómo detectarlo o detenerlo."
 },
 {
-    title: "Firewall",
-    slug: "firewall",
-    category: "Defensivas",
-    tags: ["redes", "defensa", "interview"],
-    definition: "Sistema de seguridad que filtra el tráfico de red según reglas definidas.",
-    explanation: "Puede ser hardware o software y opera permitiendo o bloqueando tráfico en función de IPs, puertos y protocolos. Los firewalls modernos incluyen inspección profunda de paquetes (DPI) y funcionalidades de detección de intrusiones.",
-    example: `Ejemplo:
-Permitir: puerto 80 y 443
-Bloquear: todo lo demás`,
-    importance: "Es la primera línea de defensa en redes y controla el acceso a los sistemas."
-},
-{
     title: "VPN",
     slug: "vpn",
     category: "Redes",
@@ -1285,18 +1273,6 @@ Empleado accede a red corporativa desde casa mediante VPN`,
     importance: "Protege la confidencialidad de los datos y es clave en entornos de trabajo remoto."
 },
 {
-    title: "Malware",
-    slug: "malware",
-    category: "Malware",
-    tags: ["malware", "ataque", "interview"],
-    definition: "Software malicioso diseñado para comprometer, dañar o explotar sistemas.",
-    explanation: "Incluye múltiples tipos como virus, troyanos, ransomware, spyware o rootkits. Puede robar información, tomar control del sistema o interrumpir operaciones. Es uno de los vectores de ataque más comunes.",
-    example: `Ejemplos:
-- Ransomware cifrando archivos
-- Spyware robando credenciales`,
-    importance: "Es la herramienta principal en muchos ataques reales y una amenaza constante para organizaciones."
-},
-{
     title: "Backdoor",
     slug: "backdoor",
     category: "Malware",
@@ -1306,26 +1282,6 @@ Empleado accede a red corporativa desde casa mediante VPN`,
     example: `Ejemplo:
 Usuario oculto con privilegios de administrador`,
     importance: "Permite a los atacantes mantener control a largo plazo sin ser detectados fácilmente."
-},
-{
-    title: "Sniffing",
-    slug: "sniffing",
-    category: "Redes",
-    tags: ["redes", "ataque", "interview"],
-    definition: "Intercepción y análisis del tráfico de red para obtener información.",
-    explanation: "Se realiza capturando paquetes en la red. Si el tráfico no está cifrado, puede revelar credenciales, cookies o datos sensibles. Herramientas como Wireshark facilitan este proceso.",
-    example: `Capturar tráfico HTTP y ver credenciales en texto plano`,
-    importance: "Demuestra la importancia del cifrado y es una técnica común en auditorías y ataques."
-},
-{
-    title: "MITM",
-    slug: "mitm",
-    category: "Ataques",
-    tags: ["ataque", "redes", "interview"],
-    definition: "Ataque en el que un atacante intercepta y potencialmente modifica la comunicación entre dos partes.",
-    explanation: "El atacante se posiciona entre cliente y servidor sin que lo sepan, pudiendo espiar o alterar datos. Es común en redes WiFi públicas o mediante técnicas como ARP spoofing.",
-    example: `Interceptar tráfico entre usuario y web en WiFi público`,
-    importance: "Compromete la confidencialidad e integridad de la comunicación."
 }
            
         ];
